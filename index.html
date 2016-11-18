@@ -387,6 +387,21 @@ function getChoice(el){
 	 
 	// alert("dscore="+dScoreTotal.toString()+" iscore="+iScoreTotal.toString()+"  sScoreTotal="+sScoreTotal.toString()+"  cscoreTotal="+cScoreTotal.toString())
 
+	//---look for total Score greater than 30
+	
+	var dbigger30=false,  ibigger30=false; sbigger30=false, cbigger30=false;
+	
+	var pf=document.getElementById("profilepattern");
+	if (dScoreTotal>30)dbigger30=true;
+	if (iScoreTotal>30)ibigger30=true;
+	if (sScoreTotal>30)sbigger30=true;
+	if (cScoreTotal>30)cbigger30=true;
+	
+	
+	
+	
+	
+	
 }
 
 
@@ -638,6 +653,7 @@ function getChoice(el){
 
 <br/><br/>
 
+<div class="profilepattern"></div>
 
 <canvas id="canvas" height="400" width="650">
 </canvas>
