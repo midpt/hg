@@ -1,0 +1,649 @@
+
+
+<!DOCTYPE html>
+
+<head>
+<!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+
+<style>
+table.t1 {
+  /* width: 100%;  */
+  background-color: #ffffff;
+  border-collapse: collapse;
+  border-width: 2px;
+  border-color: #e6e9c5;
+
+  border-style: solid;
+  color: #000000;
+}
+
+table.t1 td, table.t1 th {
+  border-width: 2px;
+  border-color:  #e6e9c5;
+  border-style: solid;
+  padding: 3px;
+
+}
+
+/*  starting from row2, every 2 row the background color is .. */
+table.t1 tr:nth-child(2n+2) {background: #eaedf2}
+
+
+
+table.t1 thead {
+  background-color: #efe4ab;
+
+}
+
+
+
+
+
+@media screen and (max-width: 420px){
+   
+  html:not(.t1) .t1 th, 
+  html:not(.t1) .t1 td {
+    font-size: 0;
+    padding: 0;
+    content: "";
+    height: 7px;
+  }
+  html:not(.t1) table {
+    position: relative; 
+    overflow: hidden;
+  }
+  html:not(.t1) table:before {
+    content: "Table: Tap to View";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+    color: #fff;
+    font-weight: bold;
+    font-size: 1.6em;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 100;
+    font-family: Helvetica, sans-serif;
+ 
+  }
+ html.t1 table:before {
+    content: "";
+    display: block;
+    background: #333;
+    padding: 10px;
+  }
+  
+  html.t1 table:before{
+    content: "Back";
+    position: absolute;
+    top: 0;
+    left: 15px;
+    padding: .5em 1em;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #fff;
+    background: #000;
+    border: 1px solid #fff;
+  }
+   /* around here we could use the HTML class to hide all other content on the page aside from the table */
+  html.t1 p, html.t1 h1 {
+    display: none; 
+  }
+ 
+ }
+
+
+</style>
+
+<script type="text/javascript">
+
+	 var dScoreTotal=0;
+	 var iScoreTotal=0;
+	 var sScoreTotal=0;
+	 var cScoreTotal=0;
+
+var canvas ;
+var context ;
+var Val_max;
+var Val_min;
+var sections;
+var xScale;
+var yScale;
+var started=false;
+
+function canInit(){
+
+if (started){
+ context.clearRect(0, 0, canvas.width, canvas.height);
+  var w = canvas.width;
+  canvas.width = 1;
+  canvas.width = w;
+ 
+ }
+ 
+ //---------------------- canvas init ------------------	
+		// set these values for your data 
+	sections = 4;
+	Val_max = 50;
+	Val_min = 0;
+	var stepSize = 10;
+	var columnSize = 30;//50; //affect row height
+	var rowSize = 50;
+	var margin = 5;//10;
+	var xAxis = [" ", "D", "I", "S", "C"] 
+		//
+		
+	canvas = document.getElementById("canvas");
+	context = canvas.getContext("2d");
+	context.fillStyle = "#0099ff"
+	//context.font = "20 pt Verdana";
+	context.font = "24px Verdana";
+	
+	yScale = ((canvas.height - columnSize - margin) / (Val_max - Val_min))-1;
+	//alert(yScale)
+	xScale = (canvas.width - rowSize) / sections;
+	
+	context.stroke ; // color of grid lines
+	context.beginPath();
+
+	// print Parameters on X axis, and vertical grid lines on the graph
+	for (i=1;i<=sections;i++) {
+		var x = i * xScale;
+		//context.fillText(xAxis[i], x,columnSize - margin);
+		//context.moveTo(x, columnSize);
+		//context.lineTo(x, canvas.height - margin);
+		context.fillText(xAxis[i], x,canvas.height - ((margin*1)+(yScale*4)));
+		context.moveTo(x, columnSize);
+		context.lineTo(x, canvas.height - ((margin*1)+(yScale*6)+12));		
+	}
+	// print row header and draw horizontal grid lines
+	var count =  0;
+	for (scale=Val_max;scale>=Val_min;scale = scale - stepSize) {
+	   // context.font = "20 pt Verdana";
+		var y = columnSize + (yScale * count * stepSize); 
+		context.fillText(scale, margin,y + margin);
+		context.moveTo(rowSize,y)
+		context.lineTo(canvas.width,y)
+		count++;
+	}
+	context.stroke();
+	
+	context.translate(rowSize,canvas.height + Val_min * yScale);
+	context.scale(1,-1 * yScale);
+	started=true;
+	plot()
+	
+ }//---end canInvi----	
+
+
+ //setTimeout("canInit()",2000);
+
+ 
+function plot(){
+    var dval=0; 
+    context.stroke ; // color of plot lines
+    dataSet=[dScoreTotal,iScoreTotal,sScoreTotal,cScoreTotal];
+	//dataSet=[0,30,10,50]
+	context.beginPath();
+	context.moveTo(0+100, dataSet[0]+8.8);
+	for (i=1;i<sections;i++) {
+		//context.lineTo(i * xScale, dataSet[i]+10);
+		dval=dataSet[i];
+		if (dval>50)dval=50;
+		context.lineTo((0+100)+(i*150), dval+8.8);
+	}
+	context.stroke();
+
+};//---end plot---
+
+function getChoice(el){
+ var curScoreObj=[]; // array will save the Select objects for the current row i.e. all the Score objecsts for CURRENT ROW.
+ var colScoreName=["","","","D Score","","I Score","","S Score", "", "C Score"]
+ 
+ var tt1=document.getElementById("t1"); // table 
+
+ //----------current row objects
+ //  current row column obj  
+ var tdd=el.parentElement;  // t1.rows.cells;  current column obj
+ //---current column index---
+ var curColInx=tdd.cellIndex; // either  3, or 5 or 7 or 9 
+ 
+ //---current row object
+ var trr=tdd.parentElement;  //t1.rows
+ var totalRow=tt1.rows.length;
+ var totalDataRow=totalRow-1;
+ //alert(totalRow)
+  var col2=trr.cells[2]; // col2.innerHTML will return the text
+  
+  
+ //---current row  column 3 object  (0 based)
+ var col3=trr.cells[3]; // NOTE!! col3.innerHTML will return HTML Select codes
+ 
+  // --- The followings are to save all the the SELECT objects for the current selected row except for the clicked SELECT list box
+  //   Hence if user current selected Dscore drop box, then its SELECT object will not be saved in array curScoreObj
+  // The purpose of the array curScoreObj is to find duplicate Score value compared with current selected Score value
+  //   Eg if currently user selected a value of 3 in Dscore, then these value would compared with those SELECT object saved
+  //   in curScoreObj which should contain 3 SELECT Objs i.e iScore, sScore and cScore
+ //----------Dscore obj ----
+ var col3Sel=col3.childNodes[0];  //get the obj for col 3 SELECT  i.e    Dscore
+ if (curColInx != 3) curScoreObj.push(col3Sel);
+ 
+ var col5=trr.cells[5]; // NOTE!! col3.innerHTML will return HTML Select codes
+ //----------Iscore obj ----
+ var col5Sel=col5.childNodes[0];  //get the obj for col 5 SELECT  i.e.  Iscore
+  if (curColInx != 5) curScoreObj.push(col5Sel);
+ 
+ var col7=trr.cells[7]; // NOTE!! col7.innerHTML will return HTML Select codes
+ //----------Sscore obj ----
+ var col7Sel=col7.childNodes[0];  //get the obj for col 7 SELECT  i.e.  Sscore
+  if (curColInx!= 7)  curScoreObj.push(col7Sel);
+ 
+ var col9=trr.cells[9]; // NOTE!! col7.innerHTML will return HTML Select codes
+ //----------Cscore obj ----
+ var col9Sel=col9.childNodes[0];  //get the obj for col 9 SELECT   i.e.  Cscore
+   if (curColInx != 9)  curScoreObj.push(col9Sel);
+   
+   
+
+
+ 
+// var col3children=col3.childNodes;
+// var col3Sel=col3children[0];
+
+ //---get current row index---
+ var rowInx=trr.rowIndex;
+ var rownums=trr.getAttribute("class");
+ var rownum=parseInt(rownums); 
+ 
+
+ 
+ //alert("current col index="+colInx);
+
+ 
+ var curSel=tdd.childNodes[0]; // current SELECT  obj. ie current Score object for the row
+ 
+ var options = el.options;
+ //-----current selected Score value ---
+ var selectedScoreVal= el.options[el.selectedIndex].value; // get current score select value
+ 
+ // ok
+ //   alert("name="+curScoreObj[0].parentNode.cellIndex);
+ 
+  // alert("name="+curScoreObj[0].parentNode.cellIndex);
+ 
+ //alert(selectedScoreVal);
+ 
+ // alert(curScoreObj[1].options[curScoreObj[1].selectedIndex].value);
+ 
+ //alert("row num="+rowInx);
+ //alert(tt1.rows[rowInx].cells.length);
+ //alert(el.options[el.selectedIndex].value);
+ //alert(el.selectedIndex);
+ var curScoreStr="";
+ var totalBlankScore=0;
+ var cellInxWithBlank=0;
+ var curRowScores=selectedScoreVal+" ,";//  eg 4,1,2,3,
+     
+     //---check for duplicate entries. for current row  i.e Each row can only have unique score of 1 to 4.  There should not be duplication
+     //---cycle thru the 4 columns Scores i.e D Score (col 3), I Score (col 5), S Score (col 7) and C Score (col 9) 
+     //  and check for duplication values
+	 for (n=0;n<curScoreObj.length;n++){
+	      //--array curScoreObj[n] contain the 
+          loopColInx=curScoreObj[n].parentNode.cellIndex; // get current looping  column index or cell index   (based 0)
+	      // alert(curScoreObj[n].options[curScoreObj[n].selectedIndex].value)
+	    // alert("Selected value="+selectedScoreVal+" for-loop current coln Value="+curScoreObj[n].options[curScoreObj[n].selectedIndex].value);
+
+		//---------check for duplication of score value on current row.  Each score on current row must be unique from 1 to 4
+		if (selectedScoreVal===curScoreObj[n].options[curScoreObj[n].selectedIndex].value){
+				//alert("Duplicate score in column "+curScoreObj[n].options[curScoreObj[n].selectedIndex].value)
+				alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])
+		}else{
+			   
+			   scoreValue=curScoreObj[n].options[curScoreObj[n].selectedIndex].value
+			   //--if is a blank, i.e user has not made a selection
+			   if (isNaN(parseInt(scoreValue))){
+				 totalBlankScore++;
+				// tdd.cellIndex; // either  3, or 5 or 7 or 9 
+				 cellInxWithBlank=curScoreObj[n].parentNode.cellIndex;
+			   }else curRowScores+=curScoreObj[n].options[curScoreObj[n].selectedIndex].value+" ,";
+		}
+
+	
+	 };//---end for-loop
+	 
+	 //---AUTO fill the ONLY blank drop box in current row if we have found there is only ONE blank unselected score----
+	 //---------check whether current row there is ONLY ONE blank score unselected ?
+	 if (totalBlankScore===1){
+	     var found1=false, found2=false, found3=false, found4=false; 
+		 var valueToAutoAssign=0;
+	     if (curRowScores.indexOf("1") !=-1)found1=true;
+	     if (curRowScores.indexOf("2") !=-1)found2=true;
+	     if (curRowScores.indexOf("3") !=-1)found3=true;
+	     if (curRowScores.indexOf("4") !=-1)found4=true;
+		 
+		 if (!found1)valueToAutoAssign=1
+		   else if (!found2)valueToAutoAssign=2
+		   else if (!found3)valueToAutoAssign=3
+		   else if (!found4) valueToAutoAssign=4
+ 
+		   
+		//alert("Found ONE entry in current row NOT selected.  The value to assing is "+valueToAutoAssign+"  The column to assign is "+ cellInxWithBlank+"  ref="+curRowScores+" found1="+found1+" found2="+found2+" found3="+found3+" found4="+found4)   
+		 trr.cells[cellInxWithBlank].childNodes[0].value=valueToAutoAssign;
+		 
+	 };//----endif (totalBlankScore===1)
+	 
+	 
+	 
+	 //-----Sum up Dscore---
+	 //---n=1 skip row index 0 which is a header
+	 
+	  dScoreTotal=0;
+	  iScoreTotal=0;
+	  sScoreTotal=0;
+	  cScoreTotal=0;
+	 
+//------------loop thru all data rows from index 1 to 15
+     //  total dscore, iscore sscore and cscore for each row 
+	 for (n=1;n<totalRow-2;n++){
+	     //---current loop row col3 SELECT obj
+	     var col3SelObj=tt1.rows[n].cells[3].childNodes[0];
+		 var col3Value=col3SelObj.options[col3SelObj.selectedIndex].value;
+		// alert(col3Value);
+		 if (!isNaN(parseInt(col3Value)))dScoreTotal+=parseInt(col3Value);
+		   //else alert("row index="+n+" not a number  "+" the value="+col3Value+"--")
+		// alert(dScoreTotal)
+	     //---current loop row col5 SELECT obj
+	     var col5SelObj=tt1.rows[n].cells[5].childNodes[0];
+		 var col5Value=col5SelObj.options[col5SelObj.selectedIndex].value;
+		 if (!isNaN(parseInt(col5Value)) )iScoreTotal+=parseInt(col5Value);
+		 
+	     //---current loop row col7 SELECT obj
+	     var col7SelObj=tt1.rows[n].cells[7].childNodes[0];
+		 var col7Value=col7SelObj.options[col7SelObj.selectedIndex].value;
+		 if (!isNaN(parseInt(col7Value)))sScoreTotal+=parseInt(col7Value);
+		 
+	     //---current loop row col9 SELECT obj
+	     var col9SelObj=tt1.rows[n].cells[9].childNodes[0];
+		 var col9Value=col9SelObj.options[col9SelObj.selectedIndex].value
+		 if (!isNaN(parseInt(col9Value)))cScoreTotal+=parseInt(col9Value);
+		//  alert(cScoreTotal.toString())
+		 
+		
+	// alert(""+col3SelObj.options[col3SelObj.selectedIndex].value)
+	  // alert(""+tt1.rows[n].cells[3].childNodes[0].nodeName)
+          //loopColInx=curScoreObj[n].parentNode.cellIndex; // get current looping  column index or cell index   (based 0)
+	      // alert(curScoreObj[n].options[curScoreObj[n].selectedIndex].value)
+	    // alert("Selected value="+selectedScoreVal+" for-loop current coln Value="+curScoreObj[n].options[curScoreObj[n].selectedIndex].value);
+		//---------check for duplication of score value on current row.  Each score on current row must be unique from 1 to 4
+
+	 };//---end for-loop	
+
+     //----update the total score in row index 16 for col index 3, 5, 7 and 9
+     tt1.rows[16].cells[3].innerHTML=dScoreTotal.toString();
+     tt1.rows[16].cells[5].innerHTML=iScoreTotal.toString();
+     tt1.rows[16].cells[7].innerHTML=sScoreTotal.toString();
+     tt1.rows[16].cells[9].innerHTML=cScoreTotal.toString();
+	 
+	// alert("dscore="+dScoreTotal.toString()+" iscore="+iScoreTotal.toString()+"  sScoreTotal="+sScoreTotal.toString()+"  cscoreTotal="+cScoreTotal.toString())
+
+}
+
+
+</script>
+</head>
+
+
+<body>
+
+<h2  >Behavior pattern assessment form</h2>
+
+<p  >Please select  1 (Disagree), 2 (Neutral), 3 (Agree) or 4 (Strongly agree) according to description best describes you.</p>
+
+<br/>
+<!-- <div class="container-fluid"> -->
+		
+<div align="center"  >
+<table id="t1" class="t1 table-striped" >
+  <thead>
+    <tr>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+      <th>D Score</th>
+      <th>&nbsp;</th>
+      <th>I Score</th>
+      <th>&nbsp;</th>
+      <th>S Score</th>
+      <th>&nbsp;</th>
+      <th>C Score</th>
+    </tr>
+  </thead>
+
+	<tbody>
+
+		<tr class="r2">
+			<td  >1</td>
+			<td  >My Character is ____</td>
+			<td  >direct</td>
+			<td class="dscore-2"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >sociable, expressive</td>
+			<td class="iscore-2"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >easy-going&nbsp;</td>
+			<td class="sscore-2"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >delicate, common sensical</td>
+			<td class="cscore-2"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r3">
+			<td  >&nbsp;2</td>
+			<td  >I like this kind of environment</td>
+			<td  >Personal achievement and reaward, goal directed&nbsp;</td>
+			<td class="dscore3"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >With people</td>
+			<td class="iscore3"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Pictures, letter and your things&nbsp;</td>
+			<td class="sscore3"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Organized</td>
+			<td class="cscore3"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r4">
+			<td  >3</td>
+			<td  >My character often ____</td>
+			<td  >result oriented&nbsp;</td>
+			<td class="dscore4"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >people oriented&nbsp;</td>
+			<td class="iscore4"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >process and team oriented</td>
+			<td class="sscore4"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >detail oriented&nbsp;</td>
+			<td class="cscore4"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r5">
+			<td  >&nbsp;4</td>
+			<td  >My behavior to others is ____</td>
+			<td  >cool</td>
+			<td class="dscore5"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >kind</td>
+			<td class="iscore5"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >loyal and self-controlled&nbsp;</td>
+			<td class="sscore5"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >cold and objective&nbsp;</td>
+			<td class="cscore5"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r6">
+			<td  >&nbsp;5</td>
+			<td  >When I hear criticism on me, I am ___</td>
+			<td  >impatient</td>
+			<td class="dscore6"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >distracted</td>
+			<td class="iscore6"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >listen carefully</td>
+			<td class="sscore6"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >analyze the fact</td>
+			<td class="cscore6"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r7">
+			<td  >&nbsp;6</td>
+			<td  >I usually talk about___</td>
+			<td  >achievements</td>
+			<td class="dscore7"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >myself and others</td>
+			<td class="iscore7"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >family and friends</td>
+			<td class="sscore7"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >affair and information</td>
+			<td class="cscore7"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r8">
+			<td  >&nbsp;7</td>
+			<td  >Influence from others</td>
+			<td  >Direct</td>
+			<td class="dscore8"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Influenced by people</td>
+			<td class="iscore8"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Generous</td>
+			<td class="sscore9"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Evaluate</td>
+			<td class="cscore8"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r9">
+			<td  >&nbsp;8</td>
+			<td  >If I am a soccer player, my position will be </td>
+			<td  >a striker</td>
+			<td class="dscore9"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >an offensive defender&nbsp;</td>
+			<td class="iscore9"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >a defensive striker</td>
+			<td class="sscore9"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >a defender</td>
+			<td class="cscore9"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r10">
+			<td  >9</td>
+			<td  >Time for me is ___</td>
+			<td  >always so busy&nbsp;</td>
+			<td class="dscore10"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >spend in relationship</td>
+			<td class="iscore10"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >cherish time</td>
+			<td class="sscore10"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >know how to manage time</td>
+			<td class="cscore10"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r11">
+			<td  >10</td>
+			<td  >Seeing traffic signs...</td>
+			<td  >May reckless drive and cause death&nbsp;</td>
+			<td class="dscore11"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Smiling mother, bright father, yield driving, wait for others&nbsp;</td>
+			<td class="iscore11"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >If we give in a little, we would have more space on road.&nbsp;</td>
+			<td class="sscore11"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Obey traffic order; peaceful land; prosperity of a nation&nbsp;&nbsp;</td>
+			<td class="cscore11"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r12">
+			<td  >&nbsp;11</td>
+			<td  >My voice is usually </td>
+			<td  >strong, high and loud</td>
+			<td class="dscore12"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >energetic, thin and high tone</td>
+			<td class="iscore12"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >less emotional, deep and low tone</td>
+			<td class="sscore12"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >cold, suppress feelings, thin and low tone&nbsp;</td>
+			<td class="cscore12"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r13">
+			<td  >12</td>
+			<td  >My gestures are usually </td>
+			<td  >strong and agile&nbsp;</td>
+			<td class="dscore13"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >open-minded and kind&nbsp;</td>
+			<td class="iscore13"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >stiffen and slow&nbsp;</td>
+			<td class="sscore13"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >calculative and prudent</td>
+			<td class="cscore13"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r14">
+			<td  >13</td>
+			<td  >I like this kind of clothes.</td>
+			<td  >Suit</td>
+			<td class="dscore14"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Casual</td>
+			<td class="iscore14"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Practical and comfortable</td>
+			<td class="sscore14"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >Simple, informal and tidy </td>
+			<td class="cscore14"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r15">
+			<td  >14</td>
+			<td  >My overall behavior can be expressed as </td>
+			<td  >authoritative</td>
+			<td class="dscore15"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >attractive outgoing and sociable</td>
+			<td class="iscore15"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >accomodating or open</td>
+			<td class="sscore15"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >critical or quiet</td>
+			<td class="cscore15"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r16">
+			<td  >15</td>
+			<td  >The pace of my life is </td>
+			<td  >fast-paced</td>
+			<td class="dscore16"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >passionate</td>
+			<td class="iscore16"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >stable</td>
+			<td class="sscore16"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td  >controlled</td>
+			<td class="cscore16"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+		</tr>
+		<tr class="r17">
+			<td  >16</td>
+			<td  >Total Score&nbsp;</td>
+			<td  >(A)Dominance</td>
+			<td class="dTotal17"  ></td>
+			<td  >(B)Influence</td>
+			<td class="iTotal17"  ></td>
+			<td  >(C)Steadiness</td>
+			<td class="sTotal17"  ></td>
+			<td  >(D)Compliance</td>
+			<td class="cTotal17"  ></td>
+		</tr>
+		<tr class="r18">
+			<td  >17</td>
+			<td  >&nbsp;</td>
+			<td  >D</td>
+			<td  >&nbsp;</td>
+			<td  >I</td>
+			<td  >&nbsp;</td>
+			<td  >S</td>
+			<td  >&nbsp;</td>
+			<td  >C</td>
+			<td  >&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<!-- </div> -->
+
+<br/>
+
+<div  ><button style="width: 10%; margin: auto;" type="button" onclick="canInit()">Plot</button></div>
+<br/>
+
+<br/><br/>
+
+
+<canvas id="canvas" height="400" width="650">
+</canvas>
+<br>
+
+
+</body>
+
+</html>
