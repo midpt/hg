@@ -387,24 +387,105 @@ function getChoice(el){
 	 
 	// alert("dscore="+dScoreTotal.toString()+" iscore="+iScoreTotal.toString()+"  sScoreTotal="+sScoreTotal.toString()+"  cscoreTotal="+cScoreTotal.toString())
 
-	//---look for total Score greater than 30
 	
-	var dbigger30=false,  ibigger30=false; sbigger30=false, cbigger30=false;
-	
-	var pf=document.getElementById("profilepattern");
-	if (dScoreTotal>30)dbigger30=true;
-	if (iScoreTotal>30)ibigger30=true;
-	if (sScoreTotal>30)sbigger30=true;
-	if (cScoreTotal>30)cbigger30=true;
-	
-	
-	
-	
-	
-	
+	profileProbe();	
+};//---getChoice()----
+
+
+function sortNumber(a,b) {
+    return b.value - a.value; // descending order  highest to lowest
 }
 
+function profileProbe(){
+	var pf=document.getElementById("profilepattern");
+	
 
+    var array = [{key: 'd', value: dScoreTotal}, {key: 'i', value: iScoreTotal}, {key: 's', value: sScoreTotal}, {key: 'c', value: cScoreTotal}];
+	array.sort(sortNumber);	
+	
+
+	
+	//--- possible sortStr= icds;//  means  iScoreTotal has highest value  and sScoreTotal has least total  
+	var sortStr=array[0].key+", "+array[1].key+", "+array[2].key+", "+array[3].key;
+	var ary=sortStr.split(","); // ary[0]=i  has the highest   ary[3]=s based on above eg and ary[1]=c ; ary[2]=d
+
+	console.log("sortStr="+sortStr);
+	
+	//---Behavior pattern profile string   eg sci or scd or    d   or  isc  refer to book pdf
+	var bpfile=""
+	if (array[0].value>30){
+	    bpfile+=array[0].key.toUpperCase(); 
+		   if (array[1].value>30){
+		       bpfile+=array[1].key.toUpperCase(); 
+                if (array[2].value>30){
+				   bpfile+=array[2].key.toUpperCase(); 
+				     if (array[3].value>30)bpfile+=array[3].key.toUpperCase(); 
+				}
+		   }
+		   
+	}
+
+    var profileName=""
+    if (bpfile !=""){
+      if (bpfile==="D")profileName="Director";
+     if (bpfile==="DI")profileName="Result oriented";
+     if (bpfile==="DIS")profileName="Relation-oriented Leader ";
+     if (bpfile==="DIC")profileName="Supreme court judge";
+     if (bpfile==="DS")profileName="Achievement oriented ";
+     if (bpfile==="DSI")profileName="Task oriented leader";
+     if (bpfile==="DSC")profileName="Task Oriented Leader";
+     if (bpfile==="DC")profileName="Pioneering";
+     if (bpfile==="DCI")profileName="Social lecturer";
+     if (bpfile==="DCS")profileName="Meister";
+     if (bpfile==="I")profileName="Moodmaker";
+     if (bpfile==="ID")profileName="Persuader";
+     if (bpfile==="IDS")profileName="Politician";
+     if (bpfile==="IDC")profileName="Leader";
+     if (bpfile==="IS")profileName="Encourager";
+     if (bpfile==="ISD")profileName="Devoted";
+     if (bpfile==="ISC")profileName="Coach";
+     if (bpfile==="IC")profileName="Relational negotiator";
+     if (bpfile==="ICD")profileName="Business negotiator";
+     if (bpfile==="ICS")profileName="Adjusting";
+     if (bpfile==="S")profileName="Team player";
+     if (bpfile==="SD")profileName="Profession achievement oriented ";
+     if (bpfile==="SDI")profileName="Designer";
+     if (bpfile==="SDC")profileName="Detective";
+     if (bpfile==="SI")profileName="Advisor";
+     if (bpfile==="SID")profileName="Peaceful Leader ";
+     if (bpfile==="SIC")profileName="Counselor ";
+     if (bpfile==="SC")profileName="Manager";
+     if (bpfile==="SCD")profileName="Strategist";
+     if (bpfile==="SCI")profileName="Pacifist";
+     if (bpfile==="C")profileName="Logical Thinking";
+     if (bpfile==="CD")profileName="Planner";
+     if (bpfile==="CDI")profileName="Producer";
+     if (bpfile==="CDS")profileName="Deliberate";
+     if (bpfile==="CI")profileName="Critic";
+     if (bpfile==="CID")profileName="Writer";
+     if (bpfile==="CIS")profileName="Negotiator";
+     if (bpfile==="CS")profileName="Principles based";
+     if (bpfile==="CSD")profileName="Overcoming national crisis ";
+     if (bpfile==="CSI")profileName="Professor";
+     if (bpfile==="DISC")profileName="Supervisor";
+
+	 
+	 
+	 
+	 
+
+    };//---if (bpfile !=""){	
+
+	if (bpfile !=""){
+         pf.innerHTML="Your behavior pattern is: <h3><b>"+bpfile+"</b></h3>"+"</br>Your are <h3><b>"+profileName+"</b></h3>";
+    }	else{
+	      pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
+	}
+	
+		console.log("bpfile="+bpfile);
+
+
+};//---end profileProbe()
 </script>
 </head>
 
