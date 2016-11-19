@@ -427,49 +427,52 @@ function profileProbe(){
 
     var profileName=""
     if (bpfile !=""){
-      if (bpfile==="D")profileName="Director";
-     if (bpfile==="DI")profileName="Result oriented";
-     if (bpfile==="DIS")profileName="Relation-oriented Leader ";
-     if (bpfile==="DIC")profileName="Supreme court judge";
-     if (bpfile==="DS")profileName="Achievement oriented ";
-     if (bpfile==="DSI")profileName="Task oriented leader";
-     if (bpfile==="DSC")profileName="Task Oriented Leader";
-     if (bpfile==="DC")profileName="Pioneering";
-     if (bpfile==="DCI")profileName="Social lecturer";
-     if (bpfile==="DCS")profileName="Meister";
-     if (bpfile==="I")profileName="Moodmaker";
-     if (bpfile==="ID")profileName="Persuader";
-     if (bpfile==="IDS")profileName="Politician";
-     if (bpfile==="IDC")profileName="Leader";
-     if (bpfile==="IS")profileName="Encourager";
-     if (bpfile==="ISD")profileName="Devoted";
-     if (bpfile==="ISC")profileName="Coach";
-     if (bpfile==="IC")profileName="Relational negotiator";
-     if (bpfile==="ICD")profileName="Business negotiator";
-     if (bpfile==="ICS")profileName="Adjusting";
-     if (bpfile==="S")profileName="Team player";
-     if (bpfile==="SD")profileName="Profession achievement oriented ";
-     if (bpfile==="SDI")profileName="Designer";
-     if (bpfile==="SDC")profileName="Detective";
-     if (bpfile==="SI")profileName="Advisor";
-     if (bpfile==="SID")profileName="Peaceful Leader ";
-     if (bpfile==="SIC")profileName="Counselor ";
-     if (bpfile==="SC")profileName="Manager";
-     if (bpfile==="SCD")profileName="Strategist";
-     if (bpfile==="SCI")profileName="Pacifist";
-     if (bpfile==="C")profileName="Logical Thinking";
-     if (bpfile==="CD")profileName="Planner";
-     if (bpfile==="CDI")profileName="Producer";
-     if (bpfile==="CDS")profileName="Deliberate";
-     if (bpfile==="CI")profileName="Critic";
-     if (bpfile==="CID")profileName="Writer";
-     if (bpfile==="CIS")profileName="Negotiator";
-     if (bpfile==="CS")profileName="Principles based";
-     if (bpfile==="CSD")profileName="Overcoming national crisis ";
-     if (bpfile==="CSI")profileName="Professor";
-     if (bpfile==="DISC")profileName="Supervisor";
-
-	 
+		 if (bpfile==="D")profileName="You are a <h3><b>Director"+"</b></h3>";
+			else if (bpfile==="DI")profileName="You are <h3><b>Result oriented"+"</b></h3>";
+			else if (bpfile==="DIS")profileName="You are a <h3><b>Relation-oriented Leader "+"</b></h3>";
+			else if (bpfile==="DIC")profileName="You are a <h3><b>Supreme court judge"+"</b></h3>";
+			else if (bpfile==="DS")profileName="You are <h3><b>Achievement oriented "+"</b></h3>";
+			else if (bpfile==="DSI")profileName="You are <h3><b>Task oriented leader"+"</b></h3>";
+			else if (bpfile==="DSC")profileName="You are a <h3><b>Professional"+"</b></h3>";
+			else if (bpfile==="DC")profileName="You are a <h3><b>Pioneer"+"</b></h3>";
+			else if (bpfile==="DCI")profileName="You are a <h3><b>Social lecturer"+"</b></h3>";
+			else if (bpfile==="DCS")profileName="You are a <h3><b>Meister"+"</b></h3>";
+			else if (bpfile==="I")profileName="You are a <h3><b>Moodmaker"+"</b></h3>";
+			else if (bpfile==="ID")profileName="You are a <h3><b>Persuader"+"</b></h3>";
+			else if (bpfile==="IDS")profileName="You are a <h3><b>Politician"+"</b></h3>";
+			else if (bpfile==="IDC")profileName="You are a <h3><b>Leader"+"</b></h3>";
+			else if (bpfile==="IS")profileName="You are an <h3><b>Encourager"+"</b></h3>";
+			else if (bpfile==="ISD")profileName="You are <h3><b>Devoted"+"</b></h3>";
+			else if (bpfile==="ISC")profileName="You are a <h3><b>Coach"+"</b></h3>";
+			else if (bpfile==="IC")profileName="You are a <h3><b>Relational negotiator"+"</b></h3>";
+			else if (bpfile==="ICD")profileName="You are a <h3><b>Business negotiator"+"</b></h3>";
+			else if (bpfile==="ICS")profileName="You are <h3><b>Adjusting"+"</b></h3>";
+			else if (bpfile==="S")profileName="You are a <h3><b>Team player"+"</b></h3>";
+			else if (bpfile==="SD")profileName="You are <h3><b>Profession achievement oriented"+"</b></h3>";
+			else if (bpfile==="SDI")profileName="You are a <h3><b>Designer"+"</b></h3>";
+			else if (bpfile==="SDC")profileName="You are a <h3><b>Detective"+"</b></h3>";
+			else if (bpfile==="SI")profileName="You are an <h3><b>Advisor"+"</b></h3>";
+			else if (bpfile==="SID")profileName="You are a <h3><b>Peaceful Leader "+"</b></h3>";
+			else if (bpfile==="SIC")profileName="You are a <h3><b>Counselor "+"</b></h3>";
+			else if (bpfile==="SC")profileName="You are a <h3><b>Manager"+"</b></h3>";
+			else if (bpfile==="SCD")profileName="You are a <h3><b>Strategist"+"</b></h3>";
+			else if (bpfile==="SCI")profileName="You are a <h3><b>Pacifist"+"</b></h3>";
+			else if (bpfile==="C")profileName="You are <h3><b>Logical thinking"+"</b></h3>";
+			else if (bpfile==="CD")profileName="You are a <h3><b>Planner"+"</b></h3>";
+			else if (bpfile==="CDI")profileName="You are a <h3><b>Producer"+"</b></h3>";
+			else if (bpfile==="CDS")profileName="You are <h3><b>Deliberate"+"</b></h3>";
+			else if (bpfile==="CI")profileName="You are a <h3><b>Critic"+"</b></h3>";
+			else if (bpfile==="CID")profileName="You are a <h3><b>Writer"+"</b></h3>";
+			else if (bpfile==="CIS")profileName="You are a <h3><b>Negotiator"+"</b></h3>";
+			else if (bpfile==="CS")profileName="You are <h3><b>Principles based"+"</b></h3>";
+			else if (bpfile==="CSD")profileName="You are <h3><b>Overcoming national crisis "+"</b></h3>";
+			else if (bpfile==="CSI")profileName="You are a <h3><b>Professor"+"</b></h3>";
+			else if (bpfile==="DISC")profileName="You are a <h3><b>Supervisor"+"</b></h3>";
+		 else{
+		     profileName="Profile name <h3><b>inconclusive."+"</b></h3>";
+		 }
+    }
+	else {
 	 
 	 
 	 
@@ -477,7 +480,7 @@ function profileProbe(){
     };//---if (bpfile !=""){	
 
 	if (bpfile !=""){
-         pf.innerHTML="Your behavior pattern is: <h3><b>"+bpfile+"</b></h3>"+"</br>Your are <h3><b>"+profileName+"</b></h3>";
+         pf.innerHTML="Your behavior pattern: <h3><b>"+bpfile+"</b></h3>"+"</br>"+profileName;
     }	else{
 	      pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
 	}
