@@ -440,7 +440,7 @@ function getChoice(el){
 	// alert("dscore="+dScoreTotal.toString()+" iscore="+iScoreTotal.toString()+"  sScoreTotal="+sScoreTotal.toString()+"  cscoreTotal="+cScoreTotal.toString())
 
 	
-	profileProbe(totalBlankScore);	
+	profileProbe(totalBlankScore,dScoreUnSelRow,iScoreUnSelRow,sScoreUnSelRow,cScoreUnSelRow);	
 };//---getChoice()----
 
 
@@ -448,7 +448,7 @@ function sortNumber(a,b) {
     return b.value - a.value; // descending order  highest to lowest
 }
 
-function profileProbe(totalUnSelectedScore){
+function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreUnSelRow,cScoreUnSelRow){
 	var pf=document.getElementById("profilepattern");
 	
 
