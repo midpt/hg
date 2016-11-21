@@ -550,12 +550,12 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 	          pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
 			 	}else{
                    //----------list unselected dscore, i score , s score, c score
-				   if (dScoreUnSelRow !="") lstUnDone+="Unselected D Score:<br>"+dScoreUnSelRow+"<br/>";
+				   if (dScoreUnSelRow !="") lstUnDone+="Unselected D Score:<br>"+dScoreUnSelRow;
 				   if (iScoreUnSelRow !="") lstUnDone+="<br/>These are the uncompleted I Score in row(s):<br>"+iScoreUnSelRow;
 				   if (sScoreUnSelRow !="") lstUnDone+="<br/>These are the uncompleted S Score in row (s):<br>"+sScoreUnSelRow;
 				   if (cScoreUnSelRow !="") lstUnDone+="<br/>These are the uncompleted CScore in row (s):<br>"+cScoreUnSelRow;
 	                pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31.<br/><br/>"+lstUnDone;
-				   
+				      
 				}
 
 	}
