@@ -320,6 +320,7 @@ function getChoice(el){
  //alert(el.options[el.selectedIndex].value);
  //alert(el.selectedIndex);
  var curScoreStr="";
+ var curRowTotalBlankScore=0;
  var totalBlankScore=0;
  var cellInxWithBlank=0;
  var curRowScores=selectedScoreVal+" ,";//  eg 4,1,2,3,
@@ -342,7 +343,7 @@ function getChoice(el){
 			   scoreValue=curScoreObj[n].options[curScoreObj[n].selectedIndex].value
 			   //--if is a blank, i.e user has not made a selection
 			   if (isNaN(parseInt(scoreValue))){
-				 totalBlankScore++;
+				 curRowTotalBlankScore++;
 				// tdd.cellIndex; // either  3, or 5 or 7 or 9 
 				 cellInxWithBlank=curScoreObj[n].parentNode.cellIndex;
 			   }else curRowScores+=curScoreObj[n].options[curScoreObj[n].selectedIndex].value+" ,";
@@ -353,7 +354,7 @@ function getChoice(el){
 	 
 	 //---AUTO fill the ONLY blank drop box in current row if we have found there is only ONE blank unselected score----
 	 //---------check whether current row there is ONLY ONE blank score unselected ?
-	 if (totalBlankScore===1){
+	 if (curRowTotalBlankScore===1){
 	     var found1=false, found2=false, found3=false, found4=false; 
 		 var valueToAutoAssign=0;
 	     if (curRowScores.indexOf("1") !=-1)found1=true;
@@ -370,7 +371,7 @@ function getChoice(el){
 		//alert("Found ONE entry in current row NOT selected.  The value to assing is "+valueToAutoAssign+"  The column to assign is "+ cellInxWithBlank+"  ref="+curRowScores+" found1="+found1+" found2="+found2+" found3="+found3+" found4="+found4)   
 		 trr.cells[cellInxWithBlank].childNodes[0].value=valueToAutoAssign;
 		 
-	 };//----endif (totalBlankScore===1)
+	 };//----endif (curRowTotalBlankScore===1)
 	 
 	 
 	 
@@ -439,7 +440,7 @@ function getChoice(el){
 	// alert("dscore="+dScoreTotal.toString()+" iscore="+iScoreTotal.toString()+"  sScoreTotal="+sScoreTotal.toString()+"  cscoreTotal="+cScoreTotal.toString())
 
 	
-	profileProbe();	
+	profileProbe(totalBlankScore);	
 };//---getChoice()----
 
 
@@ -447,7 +448,7 @@ function sortNumber(a,b) {
     return b.value - a.value; // descending order  highest to lowest
 }
 
-function profileProbe(){
+function profileProbe(totalUnSelectedScore){
 	var pf=document.getElementById("profilepattern");
 	
 
@@ -532,7 +533,7 @@ function profileProbe(){
 	
 	var lstUnDone=""	
 	if (bpfile !=""){
-	       if (totalBlankScore==0){
+	       if (totalUnSelectedScore==0){
 	             pf.innerHTML="Your behavior pattern: <h3><b>"+bpfile+"</b></h3>"+"</br>"+profileName+"";
 			 	}else{
                    //----------list unselected dscore, i score , s score, c score
@@ -545,7 +546,7 @@ function profileProbe(){
                  
 				}				
     }	else{
-	       if (totalBlankScore==0){
+	       if (totalUnSelectedScore==0){
 	          pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
 			 	}else{
                    //----------list unselected dscore, i score , s score, c score
