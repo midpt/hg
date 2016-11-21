@@ -203,23 +203,7 @@ function getChoice(el){
  
  var totalUnSelected=0;
  var totalSelected=0;
- // row1 dscore=0, iscore=0, sscore=0 and cscore=0 ...
- var scoreSel={row1:[0,0,0,0],
-               row2:[0,0,0,0],
-               row3:[0,0,0,0],
-               row4:[0,0,0,0],
-               row5:[0,0,0,0],
-               row6:[0,0,0,0],
-               row7:[0,0,0,0],
-               row8:[0,0,0,0],
-               row9:[0,0,0,0],
-               row10:[0,0,0,0],
-               row11:[0,0,0,0],
-               row12:[0,0,0,0],
-               row13:[0,0,0,0],
-               row14:[0,0,0,0],
-               row15:[0,0,0,0]
-			   }
+
  var dScoreUnSelRow="" ;//  dScoreUnSelRow="3,8,9"  means row 3,8 and 9 not yet selected by user
  var iScoreUnSelRow="" 
  var sScoreUnSelRow="" 
@@ -431,6 +415,14 @@ function getChoice(el){
 
 	 };//---end for-loop	
 
+	  //---remove last comma
+	 if (dScoreUnSelRow.charAt(dScoreUnSelRow.length-1)===",")dScoreUnSelRow=dScoreUnSelRow.substr(0,dScoreUnSelRow.length-1);
+	 if (iScoreUnSelRow.charAt(iScoreUnSelRow.length-1)===",")iScoreUnSelRow=iScoreUnSelRow.substr(0,iScoreUnSelRow.length-1);
+	 if (sScoreUnSelRow.charAt(sScoreUnSelRow.length-1)===",")sScoreUnSelRow=sScoreUnSelRow.substr(0,sScoreUnSelRow.length-1);
+	 if (cScoreUnSelRow.charAt(cScoreUnSelRow.length-1)===",")cScoreUnSelRow=cScoreUnSelRow.substr(0,cScoreUnSelRow.length-1);
+	   
+	 
+	 
      //----update the total score in row index 16 for col index 3, 5, 7 and 9
      tt1.rows[16].cells[3].innerHTML=dScoreTotal.toString();
      tt1.rows[16].cells[5].innerHTML=iScoreTotal.toString();
@@ -550,7 +542,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 	          pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
 			 	}else{
                    //----------list unselected dscore, i score , s score, c score
-				   if (dScoreUnSelRow !="") lstUnDone+="Unselected D Score:<br>"+dScoreUnSelRow;
+				   if (dScoreUnSelRow !="") lstUnDone+="These are the uncompleted D Score in row(s):<br><br>"+dScoreUnSelRow;
 				   if (iScoreUnSelRow !="") lstUnDone+="<br/>These are the uncompleted I Score in row(s):<br>"+iScoreUnSelRow;
 				   if (sScoreUnSelRow !="") lstUnDone+="<br/>These are the uncompleted S Score in row (s):<br>"+sScoreUnSelRow;
 				   if (cScoreUnSelRow !="") lstUnDone+="<br/>These are the uncompleted CScore in row (s):<br>"+cScoreUnSelRow;
