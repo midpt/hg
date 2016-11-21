@@ -201,32 +201,63 @@ function getChoice(el){
  var curScoreObj=[]; // array will save the Select objects for the current row i.e. all the Score objecsts for CURRENT ROW.
  var colScoreName=["","","","D Score","","I Score","","S Score", "", "C Score"]
  
+ var totalUnSelected=0;
+ var totalSelected=0;
+ // row1 dscore=0, iscore=0, sscore=0 and cscore=0 ...
+ var scoreSel={row1:[0,0,0,0],
+               row2:[0,0,0,0],
+               row3:[0,0,0,0],
+               row4:[0,0,0,0],
+               row5:[0,0,0,0],
+               row6:[0,0,0,0],
+               row7:[0,0,0,0],
+               row8:[0,0,0,0],
+               row9:[0,0,0,0],
+               row10:[0,0,0,0],
+               row11:[0,0,0,0],
+               row12:[0,0,0,0],
+               row13:[0,0,0,0],
+               row14:[0,0,0,0],
+               row15:[0,0,0,0]
+			   }
+ var dScoreUnSelRow="" ;//  dScoreUnSelRow="3,8,9"  means row 3,8 and 9 not yet selected by user
+ var iScoreUnSelRow="" 
+ var sScoreUnSelRow="" 
+ var cScoreUnSelRow="" 
+ 
  var tt1=document.getElementById("t1"); // table 
 
  //----------current row objects
  //  current row column obj  
  var tdd=el.parentElement;  // t1.rows.cells;  current column obj
- //---current column index---
- var curColInx=tdd.cellIndex; // either  3, or 5 or 7 or 9 
+
+
  
  //---current row object
- var trr=tdd.parentElement;  //t1.rows
+ var trr=tdd.parentElement;  //t1.
+ var curRowInx=trr.rowIndex;
  var totalRow=tt1.rows.length;
  var totalDataRow=totalRow-1;
+
+
+ 
+ 
  //alert(totalRow)
+ //---note col2 not used
   var col2=trr.cells[2]; // col2.innerHTML will return the text
   
   
  //---current row  column 3 object  (0 based)
  var col3=trr.cells[3]; // NOTE!! col3.innerHTML will return HTML Select codes
  
-  // --- The followings are to save all the the SELECT objects for the current selected row except for the clicked SELECT list box
-  //   Hence if user current selected Dscore drop box, then its SELECT object will not be saved in array curScoreObj
+  // --- The followings are to save all the the SELECT objects for the CURRENT selected ROW except for the clicked SELECT list box
+  //   Hence if user currently selected Dscore drop box, then its SELECT object will not be saved in array curScoreObj
   // The purpose of the array curScoreObj is to find duplicate Score value compared with current selected Score value
   //   Eg if currently user selected a value of 3 in Dscore, then these value would compared with those SELECT object saved
   //   in curScoreObj which should contain 3 SELECT Objs i.e iScore, sScore and cScore
+  //   If currently user selected and item in dScore, curColInx will be =3
  //----------Dscore obj ----
- var col3Sel=col3.childNodes[0];  //get the obj for col 3 SELECT  i.e    Dscore
+ var col3Sel=col3.childNodes[0];  //get the obj for col 3 which is SELECT  i.e    Dscore
  if (curColInx != 3) curScoreObj.push(col3Sel);
  
  var col5=trr.cells[5]; // NOTE!! col3.innerHTML will return HTML Select codes
@@ -253,6 +284,7 @@ function getChoice(el){
 
  //---get current row index---
  var rowInx=trr.rowIndex;
+ curRowInx=rowInx;
  var rownums=trr.getAttribute("class");
  var rownum=parseInt(rownums); 
  
@@ -266,6 +298,11 @@ function getChoice(el){
  var options = el.options;
  //-----current selected Score value ---
  var selectedScoreVal= el.options[el.selectedIndex].value; // get current score select value
+ 
+  
+
+ 
+ 
  
  // ok
  //   alert("name="+curScoreObj[0].parentNode.cellIndex);
@@ -350,23 +387,35 @@ function getChoice(el){
 	     var col3SelObj=tt1.rows[n].cells[3].childNodes[0];
 		 var col3Value=col3SelObj.options[col3SelObj.selectedIndex].value;
 		// alert(col3Value);
-		 if (!isNaN(parseInt(col3Value)))dScoreTotal+=parseInt(col3Value);
+		 //---if current dScore is a number then total up
+		 if (!isNaN(parseInt(col3Value))){
+		   dScoreTotal+=parseInt(col3Value);
+ //---update scoreSel{row#: selected value } completed status
+// scoreSel["row"+n][3]=col3Value; // this update obj scoreSel row# . It could be row2=4
+
+		 
+		 }else {dScoreUnSelRow+=n.toString()+", "; totalBlankScore++;}
+		 
 		   //else alert("row index="+n+" not a number  "+" the value="+col3Value+"--")
 		// alert(dScoreTotal)
 	     //---current loop row col5 SELECT obj
 	     var col5SelObj=tt1.rows[n].cells[5].childNodes[0];
 		 var col5Value=col5SelObj.options[col5SelObj.selectedIndex].value;
 		 if (!isNaN(parseInt(col5Value)) )iScoreTotal+=parseInt(col5Value);
+		    else {iScoreUnSelRow+=n.toString()+", "; totalBlankScore++;}
 		 
 	     //---current loop row col7 SELECT obj
 	     var col7SelObj=tt1.rows[n].cells[7].childNodes[0];
 		 var col7Value=col7SelObj.options[col7SelObj.selectedIndex].value;
 		 if (!isNaN(parseInt(col7Value)))sScoreTotal+=parseInt(col7Value);
+		    else {sScoreUnSelRow+=n.toString()+", ";	totalBlankScore++;}	 
 		 
 	     //---current loop row col9 SELECT obj
 	     var col9SelObj=tt1.rows[n].cells[9].childNodes[0];
 		 var col9Value=col9SelObj.options[col9SelObj.selectedIndex].value
 		 if (!isNaN(parseInt(col9Value)))cScoreTotal+=parseInt(col9Value);
+		    else {cScoreUnSelRow+=n.toString()+", "; totalBlankScore++;}
+		 
 		//  alert(cScoreTotal.toString())
 		 
 		
@@ -469,7 +518,7 @@ function profileProbe(){
 			else if (bpfile==="CSI")profileName="You are a <h3><b>Professor"+"</b></h3>";
 			else if (bpfile==="DISC")profileName="You are a <h3><b>Supervisor"+"</b></h3>";
 		 else{
-		     profileName="Profile name <h3><b>inconclusive."+"</b></h3>";
+		     profileName="Profile name <h3><b>Inconclusive"+"</b></h3>";
 		 }
     }
 	else {
@@ -478,12 +527,38 @@ function profileProbe(){
 	 
 
     };//---if (bpfile !=""){	
-
+	
+	var lstUnDone=""	
 	if (bpfile !=""){
-         pf.innerHTML="Your behavior pattern: <h3><b>"+bpfile+"</b></h3>"+"</br>"+profileName;
+	       if (totalBlankScore==0){
+	             pf.innerHTML="Your behavior pattern: <h3><b>"+bpfile+"</b></h3>"+"</br>"+profileName+"";
+			 	}else{
+                   //----------list unselected dscore, i score , s score, c score
+				   if (dScoreUnSelRow !="") lstUnDone+="Unselected D Score:<br>"+dScoreUnSelRow;
+				   if (iScoreUnSelRow !="") lstUnDone+="<br/>Unselected I Score:<br>"+iScoreUnSelRow;
+				   if (sScoreUnSelRow !="") lstUnDone+="<br/>Unselected S Score:<br>"+sScoreUnSelRow;
+				   if (cScoreUnSelRow !="") lstUnDone+="<br/>Unselected CScore:<br>"+cScoreUnSelRow;
+				   
+  	               pf.innerHTML="Your behavior pattern: <h3><b>"+bpfile+"</b></h3>"+"</br>"+profileName+"<br/>"+lstUnDone;
+                 
+				}				
     }	else{
-	      pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
+	       if (totalBlankScore==0){
+	          pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
+			 	}else{
+                   //----------list unselected dscore, i score , s score, c score
+				   if (dScoreUnSelRow !="") lstUnDone+="Unselected D Score:<br>"+dScoreUnSelRow;
+				   if (iScoreUnSelRow !="") lstUnDone+="<br/>Unselected I Score:<br>"+iScoreUnSelRow;
+				   if (sScoreUnSelRow !="") lstUnDone+="<br/>Unselected S Score:<br>"+sScoreUnSelRow;
+				   if (cScoreUnSelRow !="") lstUnDone+="<br/>Unselected CScore:<br>"+cScoreUnSelRow;
+	                pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31.<br/>"+lstUnDone;
+				   
+				}
+
 	}
+	
+	
+	
 	
 		console.log("bpfile="+bpfile);
 
