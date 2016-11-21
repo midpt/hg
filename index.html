@@ -197,7 +197,24 @@ function plot(){
 
 };//---end plot---
 
+//---determine radio button cutoff point selection
+function getCutOffPt(){
+ var res=0;
+ 
+	 //----get radio button threshold levelvar radios = document.getElementsByTagName('input');
+	var radios = document.getElementsByTagName('input');
+	var value;
+	for (var i = 0; i < radios.length; i++) {
+		if (radios[i].type === 'radio' && radios[i].checked) {
+			// get value, set checked flag or do whatever you need to
+			cutOffpt = radios[i].value;       
+		}
+	}
+	return cutOffpt;
+}
+
 function getChoice(el){
+ var cutOffpt=30;
  var curScoreObj=[]; // array will save the Select objects for the current row i.e. all the Score objecsts for CURRENT ROW.
  var colScoreName=["","","","D Score","","I Score","","S Score", "", "C Score"]
  
@@ -225,7 +242,7 @@ function getChoice(el){
  var totalRow=tt1.rows.length;
  var totalDataRow=totalRow-1;
 
-
+ cutOffpt=getCutOffPt();
  
  
  //alert(totalRow)
@@ -359,7 +376,7 @@ function getChoice(el){
 	 
 	 
 	 
-	 //-----Sum up Dscore---
+	 //-----Sum up Dscore, iScore, sScore and cScore---
 	 //---n=1 skip row index 0 which is a header
 	 
 	  dScoreTotal=0;
@@ -457,13 +474,13 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 	
 	//---Behavior pattern profile string   eg sci or scd or    d   or  isc  refer to book pdf
 	var bpfile=""
-	if (array[0].value>30){
+	if (array[0].value>cutOffpt){
 	    bpfile+=array[0].key.toUpperCase(); 
-		   if (array[1].value>30){
+		   if (array[1].value>cutOffpt){
 		       bpfile+=array[1].key.toUpperCase(); 
-                if (array[2].value>30){
+                if (array[2].value>cutOffpt){
 				   bpfile+=array[2].key.toUpperCase(); 
-				     if (array[3].value>30)bpfile+=array[3].key.toUpperCase(); 
+				     if (array[3].value>cutOffpt)bpfile+=array[3].key.toUpperCase(); 
 				}
 		   }
 		   
@@ -595,7 +612,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			<td  >1</td>
 			<td  >My Character is ____</td>
 			<td  >direct</td>
-			<td class="dscore-2"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore-2"  ><select  id="firstSelect" onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >sociable, expressive</td>
 			<td class="iscore-2"  ><select onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >easy-going&nbsp;</td>
@@ -804,6 +821,11 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 
 <div  ><button style="width: 10%; margin: auto;" type="button" onclick="canInit()">Plot</button></div>
 <br/>
+  <span>Cut off point: 
+  <input onclick="getChoice(document.getElementById('firstSelect'));" type="radio" name="threshold" value="30" checked > 30
+  <input onclick="getChoice(document.getElementById('firstSelect'));" type="radio" name="threshold" value="35" > 35
+  <input onclick="getChoice(document.getElementById('firstSelect'));" type="radio" name="threshold" value="40" > 40
+
 
 <br/><br/>
 
