@@ -381,7 +381,7 @@ function getChoice(el){
 // scoreSel["row"+n][3]=col3Value; // this update obj scoreSel row# . It could be row2=4
 
 		 
-		 }else {dScoreUnSelRow+=n.toString()+", "; totalBlankScore++;}
+		 }else {dScoreUnSelRow+=" "+n.toString()+","; totalBlankScore++;}
 		 
 		   //else alert("row index="+n+" not a number  "+" the value="+col3Value+"--")
 		// alert(dScoreTotal)
@@ -389,20 +389,20 @@ function getChoice(el){
 	     var col5SelObj=tt1.rows[n].cells[5].childNodes[0];
 		 var col5Value=col5SelObj.options[col5SelObj.selectedIndex].value;
 		 if (!isNaN(parseInt(col5Value)) )iScoreTotal+=parseInt(col5Value);
-		    else {iScoreUnSelRow+=n.toString()+", "; totalBlankScore++;}
+		    else {iScoreUnSelRow+=" "+n.toString()+","; totalBlankScore++;}
 		 
 	     //---current loop row col7 SELECT obj
 	     var col7SelObj=tt1.rows[n].cells[7].childNodes[0];
 		 var col7Value=col7SelObj.options[col7SelObj.selectedIndex].value;
 		 if (!isNaN(parseInt(col7Value)))sScoreTotal+=parseInt(col7Value);
-		    else {sScoreUnSelRow+=n.toString()+", ";	totalBlankScore++;}	 
+		    else {sScoreUnSelRow+=" "+n.toString()+",";	totalBlankScore++;}	 
 		 
 	     //---current loop row col9 SELECT obj
 	     var col9SelObj=tt1.rows[n].cells[9].childNodes[0];
 		 var col9Value=col9SelObj.options[col9SelObj.selectedIndex].value
 		 if (!isNaN(parseInt(col9Value)))cScoreTotal+=parseInt(col9Value);
-		    else {cScoreUnSelRow+=n.toString()+", "; totalBlankScore++;}
-		 
+		    else {cScoreUnSelRow+=" "+n.toString()+","; totalBlankScore++;}
+		  
 		//  alert(cScoreTotal.toString())
 		 
 		
