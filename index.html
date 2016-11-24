@@ -211,18 +211,27 @@ function getCutOffPt(){
 		}
 	}
 	return cutOffpt;
+};//---getCuttOffPt()
+
+function setoldvalue(element){
+   console.log ("this.value="+element.value)
+   element.setAttribute("oldvalue",element.value);
 }
 
+
+//  THERE are TWO places that call this function
 //---this is called when user selected a score dropdown box.  It is also called when user select a radio button to change cutOffpt
-//  When called from a Select dropdown , fromSelect=true, esle called from radio button is false
-function getChoice(el, fromSelect){
+//  When called from a Select dropdown , fromSelect=true, else called from radio button is false
+function getChoice(el,fromSelect){
+
  var callFromSelect=fromSelect;
  var cutOffpt=30;
  var curScoreObj=[]; // array will save the Select objects for the current row i.e. all the Score objecsts for CURRENT ROW.
  var colScoreName=["","","","D Score","","I Score","","S Score", "", "C Score"]
  
  var totalUnSelected=0;
- var totalSelected=0;
+ var totalSelected=0
+ var curRowAllScoreCompleted=false;
 
  var dScoreUnSelRow="" ;//  dScoreUnSelRow="3,8,9"  means row 3,8 and 9 not yet selected by user
  var iScoreUnSelRow="" 
@@ -281,8 +290,6 @@ function getChoice(el, fromSelect){
  var col9Sel=col9.childNodes[0];  //get the obj for col 9 SELECT   i.e.  Cscore
    if (curColInx != 9)  curScoreObj.push(col9Sel);
    
-   
-
 
  
 // var col3children=col3.childNodes;
@@ -301,11 +308,37 @@ function getChoice(el, fromSelect){
  
  var curSel=tdd.childNodes[0]; // current SELECT  obj. ie current Score object for the row
  
- var options = el.options;
+ var options = el.options; // current SELECT object
+ 
+
+ 
  //-----current selected Score value ---
  var selectedScoreVal= el.options[el.selectedIndex].value; // get current score select value
  
   
+ //----check are there numerical values for  all the SELECT dropbox in current row
+  //---Find out before user click the SELECT dropdown, what is the previous value if it was selected previously
+ var be4SelItsVal=0;
+ curRowAllScoreCompleted=false;
+ console.log("el.getAttribute('oldvalue')="+el.getAttribute("oldvalue"))
+ if (isNaN(parseInt(el.getAttribute("oldvalue"))))console.log("This dropbox previously have NOT been selected, hence its oldvalue is not a number.");
+    else {be4SelItsVal=parseInt(el.getAttribute("oldvalue")); console.log("This dropbox, previously have been selected and its old value="+be4SelItsVal)}
+	
+ console.log("be4SelItsVal="+be4SelItsVal);
+  var res1=""
+  var cntCompleted=0 ; // count will not count current selected dropbox column. It will count other Score cols should be 3 of them 
+  //---only check  when user click the SELECT dropdown.  When user click radio butt, it should not check for duplicate
+    //console.log("callFromSelect="+callFromSelect+"  curScoreObj.length="+curScoreObj.length)
+   if (callFromSelect && curScoreObj.length===3){
+	  for (n=0; n<3; n++){
+		 res1=curScoreObj[n].options[curScoreObj[n].selectedIndex].value;//find out the value of current Select dropbox.
+					   if (isNaN(parseInt(res1))){
+                           //console.log("res1 not a number  res1="+res1)
+					   }else cntCompleted++;
+	  };//---for-loop
+	 // console.log("cntCompleted="+cntCompleted)
+	  if (cntCompleted===3){curRowAllScoreCompleted=true; }
+  };//-endif (callFromSelect)
 
  
  
@@ -332,7 +365,7 @@ function getChoice(el, fromSelect){
      //---check for duplicate entries. for current row  i.e Each row can only have unique score of 1 to 4.  There should not be duplication
      //---cycle thru the 4 columns Scores i.e D Score (col 3), I Score (col 5), S Score (col 7) and C Score (col 9) 
      //  and check for duplication values
-	 //---only check for duplicate value selection when user click the dropdown.  When user click radio butt, it should notcheck for duplicate
+	 //---only check for duplicate value selection when user click the dropdown.  When user click radio butt, it should not check for duplicate
      if (callFromSelect){	 
 		 for (n=0;n<curScoreObj.length;n++){
 			  //--array curScoreObj[n] contain the 
@@ -343,7 +376,13 @@ function getChoice(el, fromSelect){
 			//---------check for duplication of score value on current row.  Each score on current row must be unique from 1 to 4
 			if (selectedScoreVal===curScoreObj[n].options[curScoreObj[n].selectedIndex].value){
 					//alert("Duplicate score in column "+curScoreObj[n].options[curScoreObj[n].selectedIndex].value)
-					alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])
+					//---if the rest of the 3 Scores in current row all completed, i.e have values 
+					//  try to swap the old value of the currently selected Score with the duplicate column  
+					if (curRowAllScoreCompleted){
+                         //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+						curScoreObj[n].value =  be4SelItsVal;
+					  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+					}else {alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])}
 			}else{
 				   
 				   scoreValue=curScoreObj[n].options[curScoreObj[n].selectedIndex].value
@@ -479,13 +518,13 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 	
 	//---Behavior pattern profile string   eg sci or scd or    d   or  isc  refer to book pdf
 	var bpfile=""
-	if (array[0].value>cutOffpt){
+	if (array[0].value>=cutOffpt){
 	    bpfile+=array[0].key.toUpperCase(); 
-		   if (array[1].value>cutOffpt){
+		   if (array[1].value>=cutOffpt){
 		       bpfile+=array[1].key.toUpperCase(); 
-                if (array[2].value>cutOffpt){
+                if (array[2].value>=cutOffpt){
 				   bpfile+=array[2].key.toUpperCase(); 
-				     if (array[3].value>cutOffpt)bpfile+=array[3].key.toUpperCase(); 
+				     if (array[3].value>=cutOffpt)bpfile+=array[3].key.toUpperCase(); 
 				}
 		   }
 		   
@@ -561,7 +600,8 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 				}				
     }	else{
 	       if (totalUnSelectedScore==0){
-	          pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than 31."
+		      var cuttplus=cutOffpt+1;
+	          pf.innerHTML="Your behavior pattern is inconclusive as ALL the scores are less than "+cutOffpt+".";
 			 	}else{
                    //----------list unselected dscore, i score , s score, c score
 				   if (dScoreUnSelRow !="") lstUnDone+="These are the uncompleted D Score in row(s):<br><br>"+dScoreUnSelRow;
@@ -617,181 +657,181 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			<td  >1</td>
 			<td  >My Character is ____</td>
 			<td  >direct</td>
-			<td class="dscore-2"  ><select  id="firstSelect" onchange="getChoice(this)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore-2"  ><select  id="firstSelect"  onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >sociable, expressive</td>
-			<td class="iscore-2"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >easy-going&nbsp;</td>
-			<td class="sscore-2"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >delicate, common sensical</td>
-			<td class="cscore-2"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r3">
 			<td  >2</td>
 			<td  >I like this kind of environment</td>
 			<td  >Personal achievement and reaward, goal directed&nbsp;</td>
-			<td class="dscore3"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >With people</td>
-			<td class="iscore3"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Pictures, letter and your things&nbsp;</td>
-			<td class="sscore3"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Organized</td>
-			<td class="cscore3"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r4">
 			<td  >3</td>
 			<td  >My character is ____</td>
 			<td  >result oriented&nbsp;</td>
-			<td class="dscore4"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >people oriented&nbsp;</td>
-			<td class="iscore4"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >process and team oriented</td>
-			<td class="sscore4"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >detail oriented&nbsp;</td>
-			<td class="cscore4"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r5">
 			<td  >4</td>
 			<td  >My behavior to others is ____</td>
 			<td  >cool</td>
-			<td class="dscore5"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onclick="setoldvalue(this)" oldvalue="" onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >kind</td>
-			<td class="iscore5"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >loyal and self-controlled&nbsp;</td>
-			<td class="sscore5"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >cold and objective&nbsp;</td>
-			<td class="cscore5"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r6">
 			<td  >5</td>
 			<td  >When I hear criticism on me, I am ___</td>
 			<td  >impatient</td>
-			<td class="dscore6"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore6"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >distracted</td>
-			<td class="iscore6"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore6"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >listen carefully</td>
-			<td class="sscore6"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore6"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >analyze the fact</td>
-			<td class="cscore6"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore6"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r7">
 			<td  >6</td>
 			<td  >I usually talk about___</td>
 			<td  >achievements</td>
-			<td class="dscore7"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore7"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >myself and others</td>
-			<td class="iscore7"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore7"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >family and friends</td>
-			<td class="sscore7"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore7"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >affair and information</td>
-			<td class="cscore7"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore7"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r8">
 			<td  >7</td>
 			<td  >Influence from others</td>
 			<td  >Direct</td>
-			<td class="dscore8"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore8"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Influenced by people</td>
-			<td class="iscore8"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore8"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Generous</td>
-			<td class="sscore9"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore9"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Evaluate</td>
-			<td class="cscore8"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore8"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r9">
 			<td  >8</td>
 			<td  >If I am a soccer player, my position will be </td>
 			<td  >a striker</td>
-			<td class="dscore9"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore9"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >an offensive defender&nbsp;</td>
-			<td class="iscore9"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore9"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >a defensive striker</td>
-			<td class="sscore9"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore9"  ><select  onclick="setoldvalue(this)" oldvalue="" onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >a defender</td>
-			<td class="cscore9"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore9"  ><select  onclick="setoldvalue(this)" oldvalue="" onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r10">
 			<td  >9</td>
 			<td  >Time for me is ___</td>
 			<td  >always so busy&nbsp;</td>
-			<td class="dscore10"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore10"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >spend in relationship</td>
-			<td class="iscore10"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore10"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >cherish time</td>
-			<td class="sscore10"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore10"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >know how to manage time</td>
-			<td class="cscore10"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore10"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r11">
 			<td  >10</td>
 			<td  >Seeing traffic signs...</td>
 			<td  >May reckless drive and cause death&nbsp;</td>
-			<td class="dscore11"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Smiling mother, bright father, yield driving, wait for others&nbsp;</td>
-			<td class="iscore11"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >If we give in a little, we would have more space on road.&nbsp;</td>
-			<td class="sscore11"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Obey traffic order; peaceful land; prosperity of a nation&nbsp;&nbsp;</td>
-			<td class="cscore11"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r12">
 			<td  >11</td>
 			<td  >My voice is usually </td>
 			<td  >strong, high and loud</td>
-			<td class="dscore12"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore12"  ><select  onclick="setoldvalue(this)" oldvalue="" onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >energetic, thin and high tone</td>
-			<td class="iscore12"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore12"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >less emotional, deep and low tone</td>
-			<td class="sscore12"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore12"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >cold, suppress feelings, thin and low tone&nbsp;</td>
-			<td class="cscore12"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore12"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r13">
 			<td  >12</td>
 			<td  >My gestures are usually </td>
 			<td  >strong and agile&nbsp;</td>
-			<td class="dscore13"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >open-minded and kind&nbsp;</td>
-			<td class="iscore13"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >stiffen and slow&nbsp;</td>
-			<td class="sscore13"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >calculative and prudent</td>
-			<td class="cscore13"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r14">
 			<td  >13</td>
 			<td  >I like this kind of clothes.</td>
 			<td  >Suit</td>
-			<td class="dscore14"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore14"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Casual</td>
-			<td class="iscore14"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore14"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Practical and comfortable</td>
-			<td class="sscore14"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore14"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Simple, informal and tidy </td>
-			<td class="cscore14"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore14"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r15">
 			<td  >14</td>
 			<td  >My overall behavior can be expressed as </td>
 			<td  >authoritative</td>
-			<td class="dscore15"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore15"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >attractive outgoing and sociable</td>
-			<td class="iscore15"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore15"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >accomodating or open</td>
-			<td class="sscore15"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore15"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >critical or quiet</td>
-			<td class="cscore15"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore15"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r16">
 			<td  >15</td>
 			<td  >The pace of my life is </td>
 			<td  >fast-paced</td>
-			<td class="dscore16"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="dscore16"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >passionate</td>
-			<td class="iscore16"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="iscore16"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >stable</td>
-			<td class="sscore16"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="sscore16"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >controlled</td>
-			<td class="cscore16"  ><select onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
+			<td class="cscore16"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r17">
 			<td  >16</td>
