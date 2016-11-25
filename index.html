@@ -4,7 +4,7 @@
 
 <head>
 <!-- <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
-
+ <meta charset="utf-8">
 <style>
 table.t1 {
   /* width: 100%;  */
@@ -621,6 +621,133 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 
 
 };//---end profileProbe()
+
+function writeCSV(){
+
+ var curScoreObj=[]; // array will save the Select objects for the current row i.e. all the Score objecsts for CURRENT ROW.
+ //var colScoreName=["","","","D Score","","I Score","","S Score", "", "C Score"]
+ 
+ var totalUnSelected=0;
+ var totalSelected=0
+ var curRowAllScoreCompleted=false;
+
+ var dScoreUnSelRow="" ;//  dScoreUnSelRow="3,8,9"  means row 3,8 and 9 not yet selected by user
+ var iScoreUnSelRow="" 
+ var sScoreUnSelRow="" 
+ var cScoreUnSelRow="" 
+ 
+ var tt1=document.getElementById("t1"); // table 
+
+ //----------first row (index=1) objects
+ //  row index=1 D score column obj  
+ var tdd=tt1.rows[1].cells[3];  // t1.rows.cells;  current column obj
+ //---current column index---
+ var curColInx=tdd.cellIndex; //should be 3.   either  3, or 5 or 7 or 9 
+
+
+ 
+ //---current row object
+ var trr=tdd.parentElement;  //t1.
+ var curRowInx=trr.rowIndex; // should be 1
+ var totalRow=tt1.rows.length;
+ var totalDataRow=totalRow-1;
+ 
+ //----------Cscore obj ----
+// var col9Sel=col9.childNodes[0];  //get the obj for col 9 SELECT   i.e.  Cscore
+   
+// var col3children=col3.childNodes;
+// var col3Sel=col3children[0];
+
+ //---get current row index---
+// var rowInx=trr.rowIndex;
+// curRowInx=rowInx;
+// var rownums=trr.getAttribute("class");
+ //var rownum=parseInt(rownums); 
+ 
+ //alert("current col index="+colInx);
+
+ //var curSel=tdd.childNodes[0]; // current SELECT  obj. ie current Score object for the row
+ 
+ //var options = el.options; // current SELECT object
+
+ 
+ //-----current selected Score value ---
+ //var selectedScoreVal= el.options[el.selectedIndex].value; // get current score select value
+    var rowws=[];
+	var curRowData =[];
+	var curRow="";
+	var row={}
+	//---loop thru row index 1 to 16
+	for (r=1; r<(tt1.rows.length-1);r++){
+	//for (r=1; r<(4);r++){
+	      curRowData =[];
+		  curRow=tt1.rows[r];
+		  //---loop thru all columns in current row
+		   for (c=0;c<curRow.cells.length;c++){
+			 var curCol=curRow.cells[c];
+			 var scoreValue=0;
+			   //---all data text field must be embedded with double quote since the data itself contain commas
+			   if (c !=3 && c !=5 && c !=7 && c !=9)curRowData.push("\""+curCol.innerHTML+"\"");
+				 else {
+				   if (r<16){ scoreValue=curCol.childNodes[0].value
+						if (isNaN(parseInt(scoreValue))){curRowData.push("Not selected");}
+						  else {curRowData.push(curCol.childNodes[0].value);}
+					}else{ curRowData.push(curCol.innerHTML) }					  
+				}
+		 
+			};////---loop thru all columns in current row
+		
+		//----update json row data--
+		
+			 row = {
+				  "row_num": curRowData[0],
+				  "des": curRowData[1],
+				  "dscore_text": curRowData[2],
+				  "dscore": curRowData[3],
+				  "iscore_text": curRowData[4],
+				  "iscore": curRowData[5],
+				  "sscore_text": curRowData[6],
+				  "sscore": curRowData[7],
+				  "cscore_text": curRowData[8],
+				  "cscore": curRowData[9]
+				};	
+			// alert("col0="+row['row-num']+"  dscore="+row['dscore']);
+            // EG rowws
+			//  rowws=[row:{}, row:{}, row:{ }....]			
+			rowws.push(row)
+						
+	};//---//---loop thru row index 1 to 16
+	
+//alert("rowws length="+rowws.length+"  rowws[0][des]="+rowws[0]["des"]+": "+rowws[0]["dscore"]+"\n"+"  rowws[1][des]"+rowws[1]["des"]+"\n"+"  rowws[2][des]"+rowws[2]["des"]+"\n"+"  rowws[3][des]"+rowws[3]["des"])
+
+   var csv="S/N, Description,dScore-text, DScore, iScore-text, IScore, SScore-text, cScore-text, CScore\n";
+   
+    rowws.forEach(function(rw) {
+	      //alert(rw.des)
+		    csv+=rw.row_num+","+rw.des+","+rw.dscore_text+","+rw.dscore+","+rw.iscore_text+","+rw.iscore+","+rw.sscore_text+","+rw.sscore+","+rw.cscore_text+","+rw.cscore
+           // csv += rw.join(',');
+            csv += "\n";
+	
+    });		
+		
+		//console.log(csv);
+		
+	var dwn=document.getElementById("dwnload")
+	var fname="behavior.csv";
+	dwn.innerHTML="<a href='"+"data:text/csv;charset=utf-8," + encodeURI(csv)+"'"+"target=_blank"+" download='"+fname+"'"+" download"+">SaveFile</a>";
+	
+	
+  // var hiddenElement = document.createElement('a');
+  //  hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+  //  hiddenElement.target = '_blank';
+  //  hiddenElement.download = 'behavior.csv';
+   // hiddenElement.click();		
+		
+
+};//------writeCSV()---
+
+
+
 </script>
 </head>
 
@@ -660,7 +787,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			<td class="dscore-2"  ><select  id="firstSelect"  onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >sociable, expressive</td>
 			<td class="iscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >easy-going&nbsp;</td>
+			<td  >easy-going </td>
 			<td class="sscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >delicate, common sensical</td>
 			<td class="cscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
@@ -668,11 +795,11 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 		<tr class="r3">
 			<td  >2</td>
 			<td  >I like this kind of environment</td>
-			<td  >Personal achievement and reaward, goal directed&nbsp;</td>
+			<td  >Personal achievement and reward, goal directed</td>
 			<td class="dscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >With people</td>
 			<td class="iscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >Pictures, letter and your things&nbsp;</td>
+			<td  >Pictures, letter and your things</td>
 			<td class="sscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >Organized</td>
 			<td class="cscore3"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
@@ -680,13 +807,13 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 		<tr class="r4">
 			<td  >3</td>
 			<td  >My character is ____</td>
-			<td  >result oriented&nbsp;</td>
+			<td  >result oriented</td>
 			<td class="dscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >people oriented&nbsp;</td>
+			<td  >people oriented </td>
 			<td class="iscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >process and team oriented</td>
 			<td class="sscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >detail oriented&nbsp;</td>
+			<td  >detail oriented </td>
 			<td class="cscore4"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r5">
@@ -696,9 +823,9 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			<td class="dscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onclick="setoldvalue(this)" oldvalue="" onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >kind</td>
 			<td class="iscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >loyal and self-controlled&nbsp;</td>
+			<td  >loyal and self-controlled </td>
 			<td class="sscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >cold and objective&nbsp;</td>
+			<td  >cold and objective </td>
 			<td class="cscore5"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r6">
@@ -742,7 +869,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			<td  >If I am a soccer player, my position will be </td>
 			<td  >a striker</td>
 			<td class="dscore9"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >an offensive defender&nbsp;</td>
+			<td  >an offensive defender </td>
 			<td class="iscore9"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >a defensive striker</td>
 			<td class="sscore9"  ><select  onclick="setoldvalue(this)" oldvalue="" onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
@@ -752,7 +879,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 		<tr class="r10">
 			<td  >9</td>
 			<td  >Time for me is ___</td>
-			<td  >always so busy&nbsp;</td>
+			<td  >always so busy </td>
 			<td class="dscore10"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >spend in relationship</td>
 			<td class="iscore10"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
@@ -764,13 +891,13 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 		<tr class="r11">
 			<td  >10</td>
 			<td  >Seeing traffic signs...</td>
-			<td  >May reckless drive and cause death&nbsp;</td>
+			<td  >May reckless drive and cause death </td>
 			<td class="dscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >Smiling mother, bright father, yield driving, wait for others&nbsp;</td>
+			<td  >Smiling mother, bright father, yield driving, wait for others </td>
 			<td class="iscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >If we give in a little, we would have more space on road.&nbsp;</td>
+			<td  >If we give in a little, we would have more space on road. </td>
 			<td class="sscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >Obey traffic order; peaceful land; prosperity of a nation&nbsp;&nbsp;</td>
+			<td  >Obey traffic order; peaceful land; prosperity of a nation  </td>
 			<td class="cscore11"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r12">
@@ -782,17 +909,17 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			<td class="iscore12"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >less emotional, deep and low tone</td>
 			<td class="sscore12"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >cold, suppress feelings, thin and low tone&nbsp;</td>
+			<td  >cold, suppress feelings, thin and low tone </td>
 			<td class="cscore12"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 		</tr>
 		<tr class="r13">
 			<td  >12</td>
 			<td  >My gestures are usually </td>
-			<td  >strong and agile&nbsp;</td>
+			<td  >strong and agile </td>
 			<td class="dscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >open-minded and kind&nbsp;</td>
+			<td  >open-minded and kind </td>
 			<td class="iscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >stiffen and slow&nbsp;</td>
+			<td  >stiffen and slow </td>
 			<td class="sscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >calculative and prudent</td>
 			<td class="cscore13"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
@@ -835,7 +962,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 		</tr>
 		<tr class="r17">
 			<td  >16</td>
-			<td  >Total Score&nbsp;</td>
+			<td  >Total Score </td>
 			<td  >(A)Dominance</td>
 			<td class="dTotal17"  ></td>
 			<td  >(B)Influence</td>
@@ -864,7 +991,9 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 
 <br/>
 
-<div  ><button style="width: 10%; margin: auto;" type="button" onclick="canInit()">Plot</button></div>
+<button style="width: 10%; margin: auto;" type="button" onclick="canInit()">Plot</button> 
+<button style="width: 10%; margin: auto;" type="button" onclick="writeCSV()">Generate Output</button> 
+
 <br/>
   <span>D, I, S and C Scores Cut off points: 
   <input onclick="getChoice(document.getElementById('firstSelect'),false);" type="radio" name="threshold" value="30" checked > 30
@@ -880,6 +1009,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 </canvas>
 <br>
 
+<div id="dwnload"></div>
 
 </body>
 
