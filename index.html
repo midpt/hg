@@ -691,7 +691,7 @@ function writeCSV(){
 			   if (c !=3 && c !=5 && c !=7 && c !=9)curRowData.push("\""+curCol.innerHTML+"\"");
 				 else {
 				   if (r<16){ scoreValue=curCol.childNodes[0].value
-						if (isNaN(parseInt(scoreValue))){curRowData.push("Not selected");}
+						if (isNaN(parseInt(scoreValue))){curRowData.push("Nil");}
 						  else {curRowData.push(curCol.childNodes[0].value);}
 					}else{ curRowData.push(curCol.innerHTML) }					  
 				}
