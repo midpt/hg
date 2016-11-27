@@ -301,7 +301,10 @@ function getChoice(el,fromSelect){
  var rownums=trr.getAttribute("class");
  var rownum=parseInt(rownums); 
  
-
+ //---ensure the first column s/n text is in black
+  // The s/n column may have value as  3? means row 3 not completed. Or it could be 3 in red means duplicate entries
+  tt1.rows[curRowInx].cells[0].innerHTML=curRowInx;
+  tt1.rows[curRowInx].cells[0].style.color="Black";
  
  //alert("current col index="+colInx);
 
@@ -361,13 +364,78 @@ function getChoice(el,fromSelect){
  var totalBlankScore=0;
  var cellInxWithBlank=0;
  var curRowScores=selectedScoreVal+" ,";//  eg 4,1,2,3,
-  var duplicateFound=false;
+ var duplicateFound=false;
      
      //---check for duplicate entries. for current row  i.e Each row can only have unique score of 1 to 4.  There should not be duplication
      //---cycle thru the 4 columns Scores i.e D Score (col 3), I Score (col 5), S Score (col 7) and C Score (col 9) 
      //  and check for duplication values
 	 //---only check for duplicate value selection when user click the dropdown.  When user click radio butt, it should not check for duplicate
-     if (callFromSelect){	 
+     if (callFromSelect){
+	     duplicateFound=false;
+         var curRowDVal=tt1.rows[curRowInx].cells[3].childNodes[0].value;
+		 if  (isNaN(parseInt(curRowDVal))){
+		            cellInxWithBlank=3;
+					 curRowTotalBlankScore++;
+		 }else {
+		     curRowScores+=curRowDVal+" ,";
+		     if (curRowDVal===tt1.rows[curRowInx].cells[5].childNodes[0].value){
+			     duplicateFound=true;
+				 tt1.rows[curRowInx].cells[0].style.color="red";
+				 alert("Duplicate entries found in D Score and I Score");
+				 }
+				 else if (curRowDVal===tt1.rows[curRowInx].cells[7].childNodes[0].value){
+					 duplicateFound=true;
+					 tt1.rows[curRowInx].cells[0].style.color="red";
+					 alert("Duplicate entries found in D Score and S Score");
+					 }
+				 else if (curRowDVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
+					 duplicateFound=true;
+					 tt1.rows[curRowInx].cells[0].style.color="red";
+					 alert("Duplicate entries found in D Score and C Score");				 
+				 } 
+			  else {curRowScores+=tt1.rows[curRowInx].cells[7].childNodes[0].value+" ,"+tt1.rows[curRowInx].cells[9].childNodes[0].value+" ,";}
+			   
+		 };// --endif get get current row Dscore compare with the rest of the score on the same row
+		 
+         var curRowIVal=tt1.rows[curRowInx].cells[5].childNodes[0].value;
+		 if  (isNaN(parseInt(curRowIVal))){
+		             cellInxWithBlank=5;
+					 curRowTotalBlankScore++;
+		 }else {
+		     curRowScores+=curRowIVal+" ,";
+		     if (curRowIVal===tt1.rows[curRowInx].cells[7].childNodes[0].value){
+			       duplicateFound=true;
+				   tt1.rows[curRowInx].cells[0].style.color="red";
+				   alert("Duplicate entries found in I Score and S Score");
+				 }else if (curRowIVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
+					 duplicateFound=true;
+					 tt1.rows[curRowInx].cells[0].style.color="red";
+					 alert("Duplicate entries found in I Score and C Score");
+					 
+			  }else {curRowScores+=tt1.rows[curRowInx].cells[7].childNodes[0].value+" ,"+tt1.rows[curRowInx].cells[9].childNodes[0].value+", ";}
+		 };// --endif get get current row Iscore compare with S, C score on the same row	
+
+         var curRowSVal=tt1.rows[curRowInx].cells[7].childNodes[0].value;
+		 if  (isNaN(parseInt(curRowSVal))){
+					cellInxWithBlank=7;
+					 curRowTotalBlankScore++;
+		 }else {
+		     curRowScores+=curRowSVal+" ,";
+		     if (curRowSVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
+			     duplicateFound=true;
+				 tt1.rows[curRowInx].cells[0].style.color="red";				 
+				 alert("Duplicate entries found in S Score and C Score");
+			  }else {curRowScores+=tt1.rows[curRowInx].cells[9].childNodes[0].value+" ,"}
+		 };// --endif get get current row Iscore compare with S, C score on the same row	
+
+         var curRowCVal=tt1.rows[curRowInx].cells[9].childNodes[0].value;
+		 if  (isNaN(parseInt(curRowCVal))){
+		      cellInxWithBlank=9;
+		 	 curRowTotalBlankScore++;
+			 } else {curRowScores+=curRowCVal}
+		 
+		 
+/*	 
 		 for (n=0;n<curScoreObj.length;n++){
 			  //--array curScoreObj[n] contain the 
 			  loopColInx=curScoreObj[n].parentNode.cellIndex; // get current looping  column index or cell index   (based 0)
@@ -384,9 +452,10 @@ function getChoice(el,fromSelect){
 						curScoreObj[n].value =  be4SelItsVal;
 					  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 					}else {
-					   duplicateFound=true;
-					   alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])
-					 }
+					  tt1.rows[curRowInx].cells[0].style.color="red";
+					  duplicateFound=true;
+					  alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])
+					  }
 			}else{
 				   
 				   scoreValue=curScoreObj[n].options[curScoreObj[n].selectedIndex].value
@@ -400,9 +469,14 @@ function getChoice(el,fromSelect){
 
 		
 		 };//---end for-loop
+ */ 
+ 
+ 
 
 		 //---AUTO fill the ONLY blank drop box in current row if we have found there is only ONE blank unselected score----
 		 //---------check whether current row there is ONLY ONE blank score unselected ?
+	//	console.log("duplicateFound="+duplicateFound+" curRowTotalBlankScore="+curRowTotalBlankScore);
+	console.log("curRowScores="+curRowScores);
 		 if (curRowTotalBlankScore===1 && !duplicateFound){
 			 var found1=false, found2=false, found3=false, found4=false; 
 			 var valueToAutoAssign=0;
