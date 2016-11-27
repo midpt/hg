@@ -361,6 +361,7 @@ function getChoice(el,fromSelect){
  var totalBlankScore=0;
  var cellInxWithBlank=0;
  var curRowScores=selectedScoreVal+" ,";//  eg 4,1,2,3,
+  var duplicateFound=false;
      
      //---check for duplicate entries. for current row  i.e Each row can only have unique score of 1 to 4.  There should not be duplication
      //---cycle thru the 4 columns Scores i.e D Score (col 3), I Score (col 5), S Score (col 7) and C Score (col 9) 
@@ -382,7 +383,10 @@ function getChoice(el,fromSelect){
                          //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 						curScoreObj[n].value =  be4SelItsVal;
 					  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
-					}else {alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])}
+					}else {
+					   duplicateFound=true;
+					   alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx])
+					 }
 			}else{
 				   
 				   scoreValue=curScoreObj[n].options[curScoreObj[n].selectedIndex].value
@@ -399,7 +403,7 @@ function getChoice(el,fromSelect){
 
 		 //---AUTO fill the ONLY blank drop box in current row if we have found there is only ONE blank unselected score----
 		 //---------check whether current row there is ONLY ONE blank score unselected ?
-		 if (curRowTotalBlankScore===1){
+		 if (curRowTotalBlankScore===1 && !duplicateFound){
 			 var found1=false, found2=false, found3=false, found4=false; 
 			 var valueToAutoAssign=0;
 			 if (curRowScores.indexOf("1") !=-1)found1=true;
