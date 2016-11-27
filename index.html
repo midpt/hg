@@ -363,7 +363,7 @@ function getChoice(el,fromSelect){
  var curRowTotalBlankScore=0;
  var totalBlankScore=0;
  var cellInxWithBlank=0;
- var curRowScores=selectedScoreVal+" ,";//  eg 4,1,2,3,
+ var curRowScores=selectedScoreVal+" ,";//  eg 4,1,2,3,  or  2,,3,3,3,1,,1
  var duplicateFound=false;
      
      //---check for duplicate entries. for current row  i.e Each row can only have unique score of 1 to 4.  There should not be duplication
@@ -379,19 +379,56 @@ function getChoice(el,fromSelect){
 		 }else {
 		     curRowScores+=curRowDVal+" ,";
 		     if (curRowDVal===tt1.rows[curRowInx].cells[5].childNodes[0].value){
-			     duplicateFound=true;
-				 tt1.rows[curRowInx].cells[0].style.color="red";
-				 alert("Duplicate entries found in D Score and I Score");
+			     //duplicateFound=true;
+				// tt1.rows[curRowInx].cells[0].style.color="red";
+				// alert("Duplicate entries found in D Score and I Score
+						//---if the rest of the 3 Scores in current row all completed, i.e have values 
+						//  try to swap the old value of the currently selected Score with the duplicate column  
+						if (curRowAllScoreCompleted){
+							 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+							tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
+						  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+						}else {
+						  tt1.rows[curRowInx].cells[0].style.color="red";
+						  duplicateFound=true;
+						  alert("Duplicate entries found in D Score and I Score
+						  }				 
+				 
 				 }
 				 else if (curRowDVal===tt1.rows[curRowInx].cells[7].childNodes[0].value){
-					 duplicateFound=true;
-					 tt1.rows[curRowInx].cells[0].style.color="red";
-					 alert("Duplicate entries found in D Score and S Score");
+					// duplicateFound=true;
+					// tt1.rows[curRowInx].cells[0].style.color="red";
+					// alert("Duplicate entries found in D Score and S Score");
+							//---if the rest of the 3 Scores in current row all completed, i.e have values 
+							//  try to swap the old value of the currently selected Score with the duplicate column  
+							if (curRowAllScoreCompleted){
+								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+								tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
+							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+							}else {
+							  tt1.rows[curRowInx].cells[0].style.color="red";
+							  duplicateFound=true;
+							  	 alert("Duplicate entries found in D Score and S Score");
+
+							  }						 
+					 
+					 
 					 }
 				 else if (curRowDVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
-					 duplicateFound=true;
-					 tt1.rows[curRowInx].cells[0].style.color="red";
-					 alert("Duplicate entries found in D Score and C Score");				 
+					 //duplicateFound=true;
+					 //tt1.rows[curRowInx].cells[0].style.color="red";
+					 //alert("Duplicate entries found in D Score and C Score");	
+							//---if the rest of the 3 Scores in current row all completed, i.e have values 
+							//  try to swap the old value of the currently selected Score with the duplicate column  
+							if (curRowAllScoreCompleted){
+								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+								tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+							}else {
+							  tt1.rows[curRowInx].cells[0].style.color="red";
+							  duplicateFound=true;
+							  	 alert("Duplicate entries found in D Score and C Score");	
+							  }						 
 				 } 
 			  else {curRowScores+=tt1.rows[curRowInx].cells[7].childNodes[0].value+" ,"+tt1.rows[curRowInx].cells[9].childNodes[0].value+" ,";}
 			   
@@ -404,13 +441,37 @@ function getChoice(el,fromSelect){
 		 }else {
 		     curRowScores+=curRowIVal+" ,";
 		     if (curRowIVal===tt1.rows[curRowInx].cells[7].childNodes[0].value){
-			       duplicateFound=true;
-				   tt1.rows[curRowInx].cells[0].style.color="red";
-				   alert("Duplicate entries found in I Score and S Score");
+					//duplicateFound=true;
+				   // tt1.rows[curRowInx].cells[0].style.color="red";
+				   //alert("Duplicate entries found in I Score and S Score");
+							//---if the rest of the 3 Scores in current row all completed, i.e have values 
+							//  try to swap the old value of the currently selected Score with the duplicate column  
+							if (curRowAllScoreCompleted){
+								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+								tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
+							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+							}else {
+							  tt1.rows[curRowInx].cells[0].style.color="red";
+							  duplicateFound=true;
+							  alert("Duplicate entries found in I Score and S Score");
+							  }						   
+				   
+				   
 				 }else if (curRowIVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
-					 duplicateFound=true;
-					 tt1.rows[curRowInx].cells[0].style.color="red";
-					 alert("Duplicate entries found in I Score and C Score");
+					// duplicateFound=true;
+					 //tt1.rows[curRowInx].cells[0].style.color="red";
+					 //alert("Duplicate entries found in I Score and C Score");
+							//---if the rest of the 3 Scores in current row all completed, i.e have values 
+							//  try to swap the old value of the currently selected Score with the duplicate column  
+							if (curRowAllScoreCompleted){
+								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+								tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+							}else {
+							  tt1.rows[curRowInx].cells[0].style.color="red";
+							  duplicateFound=true;
+							  alert("Duplicate entries found in I Score and C Score");
+							  }							 
 					 
 			  }else {curRowScores+=tt1.rows[curRowInx].cells[7].childNodes[0].value+" ,"+tt1.rows[curRowInx].cells[9].childNodes[0].value+", ";}
 		 };// --endif get get current row Iscore compare with S, C score on the same row	
@@ -422,9 +483,23 @@ function getChoice(el,fromSelect){
 		 }else {
 		     curRowScores+=curRowSVal+" ,";
 		     if (curRowSVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
-			     duplicateFound=true;
-				 tt1.rows[curRowInx].cells[0].style.color="red";				 
-				 alert("Duplicate entries found in S Score and C Score");
+			     //duplicateFound=true;
+				// tt1.rows[curRowInx].cells[0].style.color="red";				 
+				// alert("Duplicate entries found in S Score and C Score");
+							//---if the rest of the 3 Scores in current row all completed, i.e have values 
+							//  try to swap the old value of the currently selected Score with the duplicate column  
+							if (curRowAllScoreCompleted){
+								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
+								tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
+							}else {
+							  tt1.rows[curRowInx].cells[0].style.color="red";
+							  duplicateFound=true;
+							  alert("Duplicate entries found in S Score and C Score");
+							  }					 
+				 
+				 
+				 
 			  }else {curRowScores+=tt1.rows[curRowInx].cells[9].childNodes[0].value+" ,"}
 		 };// --endif get get current row Iscore compare with S, C score on the same row	
 
