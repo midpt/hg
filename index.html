@@ -385,8 +385,9 @@ function getChoice(el,fromSelect){
 						//---if the rest of the 3 Scores in current row all completed, i.e have values 
 						//  try to swap the old value of the currently selected Score with the duplicate column  
 						if (curRowAllScoreCompleted){
+console.log("3 vs 5");						
 							 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-							if (curColInx !=5) tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
+							if (curColInx ===5) tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
 							   else  tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
 						  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 						}else {
@@ -403,6 +404,7 @@ function getChoice(el,fromSelect){
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
+console.log("3 vs 7");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								if (curColInx ===7)tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
 								  else tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
@@ -417,6 +419,7 @@ function getChoice(el,fromSelect){
 					 
 					 }
 				 else if (curRowDVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
+console.log("3 vs 9");					 
 					 //duplicateFound=true;
 					 //tt1.rows[curRowInx].cells[0].style.color="red";
 					 //alert("Duplicate entries found in D Score and C Score");	
@@ -444,12 +447,14 @@ function getChoice(el,fromSelect){
 		 }else {
 		     curRowScores+=curRowIVal+" ,";
 		     if (curRowIVal===tt1.rows[curRowInx].cells[7].childNodes[0].value){
+			 
 					//duplicateFound=true;
 				   // tt1.rows[curRowInx].cells[0].style.color="red";
 				   //alert("Duplicate entries found in I Score and S Score");
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
+console.log("5 vs 7");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								 if (curColInx ===7)tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
 								   else tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
@@ -468,6 +473,7 @@ function getChoice(el,fromSelect){
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
+console.log("5 vs 9");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								 if (curColInx ===9)tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
 								   else tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
@@ -494,6 +500,7 @@ function getChoice(el,fromSelect){
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
+console.log("7 vs 9");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								if (curColInx ===9)tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
 								  else tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
@@ -913,7 +920,7 @@ function writeCSV(){
 
 <body>
 
-<h2  >Behavior pattern assessment form</h2>
+<h2  >Behavior pattern assessment form !</h2>
 
 <p  >Please select  1 (Disagree), 2 (Neutral), 3 (Agree) or 4 (Strongly agree) according to description best describes you.</p>
 
