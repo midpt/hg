@@ -373,6 +373,7 @@ function getChoice(el,fromSelect){
      if (callFromSelect){
 	     duplicateFound=false;
          var curRowDVal=tt1.rows[curRowInx].cells[3].childNodes[0].value;
+console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowDVal="+curRowDVal)		 
 		 if  (isNaN(parseInt(curRowDVal))){
 		            cellInxWithBlank=3;
 					 curRowTotalBlankScore++;
@@ -441,6 +442,7 @@ console.log("3 vs 9");
 		 };// --endif get get current row Dscore compare with the rest of the score on the same row
 		 
          var curRowIVal=tt1.rows[curRowInx].cells[5].childNodes[0].value;
+console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowIVal="+curRowIVal)		 
 		 if  (isNaN(parseInt(curRowIVal))){
 		             cellInxWithBlank=5;
 					 curRowTotalBlankScore++;
@@ -488,6 +490,7 @@ console.log("5 vs 9");
 		 };// --endif get get current row Iscore compare with S, C score on the same row	
 
          var curRowSVal=tt1.rows[curRowInx].cells[7].childNodes[0].value;
+console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowSVal="+curRowSVal)		 
 		 if  (isNaN(parseInt(curRowSVal))){
 					cellInxWithBlank=7;
 					 curRowTotalBlankScore++;
@@ -517,6 +520,7 @@ console.log("7 vs 9");
 		 };// --endif get get current row Iscore compare with S, C score on the same row	
 
          var curRowCVal=tt1.rows[curRowInx].cells[9].childNodes[0].value;
+console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowCVal="+curRowCVal)			 
 		 if  (isNaN(parseInt(curRowCVal))){
 		      cellInxWithBlank=9;
 		 	 curRowTotalBlankScore++;
@@ -920,7 +924,7 @@ function writeCSV(){
 
 <body>
 
-<h2  >Behavior pattern assessment form !</h2>
+<h2  >Behavior pattern assessment form </h2>
 
 <p  >Please select  1 (Disagree), 2 (Neutral), 3 (Agree) or 4 (Strongly agree) according to description best describes you.</p>
 
