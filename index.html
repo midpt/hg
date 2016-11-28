@@ -386,7 +386,8 @@ function getChoice(el,fromSelect){
 						//  try to swap the old value of the currently selected Score with the duplicate column  
 						if (curRowAllScoreCompleted){
 							 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-							tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
+							if (curRowInx !=5) tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
+							   else  tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
 						  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 						}else {
 						  tt1.rows[curRowInx].cells[0].style.color="red";
@@ -403,7 +404,8 @@ function getChoice(el,fromSelect){
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-								tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
+								if (curRowInx !=7)tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
+								  else tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
 							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 							}else {
 							  tt1.rows[curRowInx].cells[0].style.color="red";
@@ -422,7 +424,8 @@ function getChoice(el,fromSelect){
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-								tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+								if (curRowInx !=9)tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+								  else tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
 							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 							}else {
 							  tt1.rows[curRowInx].cells[0].style.color="red";
@@ -448,7 +451,8 @@ function getChoice(el,fromSelect){
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-								tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
+								 if (curRowInx !=7)tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
+								   else tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
 							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 							}else {
 							  tt1.rows[curRowInx].cells[0].style.color="red";
@@ -465,7 +469,8 @@ function getChoice(el,fromSelect){
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-								tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+								 if (curRowInx !=9)tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+								   else tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
 							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 							}else {
 							  tt1.rows[curRowInx].cells[0].style.color="red";
@@ -490,7 +495,8 @@ function getChoice(el,fromSelect){
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
-								tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+								if (curRowInx !=9)tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
+								  else tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
 							  //alert("Duplicate entries found in "+colScoreName[curColInx]+ " and  "+ colScoreName[loopColInx]+"  be4SelItsVal="+be4SelItsVal)
 							}else {
 							  tt1.rows[curRowInx].cells[0].style.color="red";
