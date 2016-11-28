@@ -669,7 +669,7 @@ console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowCVal="+cu
 	  document.getElementById("out").style.display = "";
 	  document.getElementById("dwnload").innerHTML="";
 	}else {
-	  document.getElementById("dwnload").innerHTML="<b> Please complete the rest of the Score selections.</b>"
+	  document.getElementById("dwnload").innerHTML="<b> Please complete the rest of the Score selections.</b><br/>"
 	
 	}
 	
@@ -961,7 +961,7 @@ function writeCSV(){
 			<td class="dscore-2"  ><select  id="firstSelect"  onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >sociable, expressive</td>
 			<td class="iscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
-			<td  >easy-going </td>
+			<td  >easy going </td>
 			<td class="sscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
 			<td  >delicate, common sensical</td>
 			<td class="cscore-2"  ><select onclick="setoldvalue(this)" oldvalue=""  onchange="getChoice(this, true)"><option disabled selected value>Pls select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option</select></td>
@@ -1170,7 +1170,7 @@ function writeCSV(){
 &nbsp; &nbsp;
 <span id="dwnload"></span>
 <br/>
-  <span>D, I, S and C Scores Cut off points: 
+  <span>D, I, S and C Scores Cut-off points: 
   <input onclick="getChoice(document.getElementById('firstSelect'),false);" type="radio" name="threshold" value="30" checked > 30
   <input onclick="getChoice(document.getElementById('firstSelect'),false);" type="radio" name="threshold" value="35" > 35
   <input onclick="getChoice(document.getElementById('firstSelect'),false);" type="radio" name="threshold" value="40" > 40
