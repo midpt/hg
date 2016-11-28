@@ -667,6 +667,9 @@ console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowCVal="+cu
 	  document.getElementById("plot").style.display = "";
 	   // ---reveal Generate Output button
 	  document.getElementById("out").style.display = "";
+	}else {
+	  document.getElementById("dwnload").innerHTML="<b> Please complete the rest of the Score selections.</b>"
+	
 	}
 	
 	profileProbe(totalBlankScore,dScoreUnSelRow,iScoreUnSelRow,sScoreUnSelRow,cScoreUnSelRow);	
@@ -924,7 +927,7 @@ function writeCSV(){
 
 <body>
 
-<h2  >Behavior pattern assessment form !</h2>
+<h2  >Behavior pattern assessment form </h2>
 
 <p  >Please select  1 (Disagree), 2 (Neutral), 3 (Agree) or 4 (Strongly agree) according to description best describes you.</p>
 
