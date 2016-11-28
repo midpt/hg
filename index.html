@@ -373,7 +373,7 @@ function getChoice(el,fromSelect){
      if (callFromSelect){
 	     duplicateFound=false;
          var curRowDVal=tt1.rows[curRowInx].cells[3].childNodes[0].value;
-console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowDVal="+curRowDVal)		 
+//console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowDVal="+curRowDVal)		 
 		 if  (isNaN(parseInt(curRowDVal))){
 		            cellInxWithBlank=3;
 					 curRowTotalBlankScore++;
@@ -386,7 +386,7 @@ console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowDVal="+cu
 						//---if the rest of the 3 Scores in current row all completed, i.e have values 
 						//  try to swap the old value of the currently selected Score with the duplicate column  
 						if (curRowAllScoreCompleted){
-console.log("3 vs 5");						
+//console.log("3 vs 5");						
 							 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 							if (curColInx ===5) tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
 							   else  tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
@@ -405,7 +405,7 @@ console.log("3 vs 5");
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
-console.log("3 vs 7");								
+//console.log("3 vs 7");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								if (curColInx ===7)tt1.rows[curRowInx].cells[3].childNodes[0].value =  be4SelItsVal;
 								  else tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
@@ -420,7 +420,7 @@ console.log("3 vs 7");
 					 
 					 }
 				 else if (curRowDVal===tt1.rows[curRowInx].cells[9].childNodes[0].value){
-console.log("3 vs 9");					 
+//console.log("3 vs 9");					 
 					 //duplicateFound=true;
 					 //tt1.rows[curRowInx].cells[0].style.color="red";
 					 //alert("Duplicate entries found in D Score and C Score");	
@@ -442,7 +442,7 @@ console.log("3 vs 9");
 		 };// --endif get get current row Dscore compare with the rest of the score on the same row
 		 
          var curRowIVal=tt1.rows[curRowInx].cells[5].childNodes[0].value;
-console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowIVal="+curRowIVal)		 
+//console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowIVal="+curRowIVal)		 
 		 if  (isNaN(parseInt(curRowIVal))){
 		             cellInxWithBlank=5;
 					 curRowTotalBlankScore++;
@@ -456,7 +456,7 @@ console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowIVal="+cu
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
-console.log("5 vs 7");								
+//console.log("5 vs 7");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								 if (curColInx ===7)tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
 								   else tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
@@ -475,7 +475,7 @@ console.log("5 vs 7");
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
-console.log("5 vs 9");								
+//console.log("5 vs 9");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								 if (curColInx ===9)tt1.rows[curRowInx].cells[5].childNodes[0].value =  be4SelItsVal;
 								   else tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
@@ -490,7 +490,7 @@ console.log("5 vs 9");
 		 };// --endif get get current row Iscore compare with S, C score on the same row	
 
          var curRowSVal=tt1.rows[curRowInx].cells[7].childNodes[0].value;
-console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowSVal="+curRowSVal)		 
+//console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowSVal="+curRowSVal)		 
 		 if  (isNaN(parseInt(curRowSVal))){
 					cellInxWithBlank=7;
 					 curRowTotalBlankScore++;
@@ -503,7 +503,7 @@ console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowSVal="+cu
 							//---if the rest of the 3 Scores in current row all completed, i.e have values 
 							//  try to swap the old value of the currently selected Score with the duplicate column  
 							if (curRowAllScoreCompleted){
-console.log("7 vs 9");								
+//console.log("7 vs 9");								
 								 //---assign a value to the column that found to have duplicate value to an old value of the selected dropdown SELECT  
 								if (curColInx ===9)tt1.rows[curRowInx].cells[7].childNodes[0].value =  be4SelItsVal;
 								  else tt1.rows[curRowInx].cells[9].childNodes[0].value =  be4SelItsVal;
@@ -520,7 +520,7 @@ console.log("7 vs 9");
 		 };// --endif get get current row Iscore compare with S, C score on the same row	
 
          var curRowCVal=tt1.rows[curRowInx].cells[9].childNodes[0].value;
-console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowCVal="+curRowCVal)			 
+//console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowCVal="+curRowCVal)			 
 		 if  (isNaN(parseInt(curRowCVal))){
 		      cellInxWithBlank=9;
 		 	 curRowTotalBlankScore++;
