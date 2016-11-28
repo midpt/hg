@@ -667,6 +667,7 @@ console.log("curRowAllScoreCompleted="+curRowAllScoreCompleted+" curRowCVal="+cu
 	  document.getElementById("plot").style.display = "";
 	   // ---reveal Generate Output button
 	  document.getElementById("out").style.display = "";
+	  document.getElementById("dwnload").innerHTML="";
 	}else {
 	  document.getElementById("dwnload").innerHTML="<b> Please complete the rest of the Score selections.</b>"
 	
@@ -753,7 +754,7 @@ function profileProbe(totalUnSelectedScore,dScoreUnSelRow,iScoreUnSelRow,sScoreU
 			else if (bpfile==="CSI")profileName="You are a <h3><b>Professor"+"</b></h3>";
 			else if (bpfile==="DISC")profileName="You are a <h3><b>Supervisor"+"</b></h3>";
 		 else{
-		     profileName="Profile name <h3><b>Inconclusive"+"</b></h3>";
+		     profileName="Profile name: <h3><b>Inconclusive"+"</b></h3>";
 		 }
     }
 	else {
